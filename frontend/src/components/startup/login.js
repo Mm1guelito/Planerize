@@ -30,7 +30,9 @@ const Login = (props) => {
         <Button onClick={props.handleSwitchRegister}>Login</Button>
       </div>
       <div>
-        <Button>Register</Button>
+        <span>
+          Not yet a member?<Button>Register</Button>
+        </span>
       </div>
     </div>
   );
