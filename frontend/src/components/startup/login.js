@@ -44,7 +44,16 @@ const Login = (props) => {
         />
       </div>
       <div>
-        <Button>Login</Button>
+        <Button
+          style={{
+            backgroundColor: "#58C1A8",
+            color: "black",
+            fontWeight: "bold",
+            textTransform: "none",
+          }}
+        >
+          Login
+        </Button>
       </div>
       <div>
         <span>

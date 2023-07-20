@@ -1,10 +1,12 @@
 import "./App.css";
-import MainStartUp from "./components/startup/main";
+import MainDashboard from "./components/MainDashboard/MainDashboard";
+// import MainStartUp from "./components/startup/main";
 
 function App() {
   return (
     <div className="App">
-      <MainStartUp />
+      {/* <MainStartUp /> */}
+      <MainDashboard />
     </div>
   );
 }
