@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, TextField } from "@mui/material";
 import PlanerizeIcon from "../../static/PlanerizeIcon.png";
+import { useNavigate } from "react-router-dom";
 
 const styles = {
   container: {
@@ -28,19 +29,38 @@ const Login = (props) => {
     },
   };
 
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
+
+  const navigate = useNavigate(); // Get the navigate function
+
+  const handleLogin = () => {
+    // Assuming "/main-dashboard" is the path to the MainDashboard component
+    navigate("/main-dashboard");
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.centered}>
         <img src={PlanerizeIcon} alt="Planerize Icon" />
       </div>
       <div style={styles.centered}>
-        <TextField placeholder="Email" inputProps={inputProps} size="small" />
+        <TextField
+          value={email}
+          placeholder="Email"
+          inputProps={inputProps}
+          size="small"
+          onChange={(e) => setEmail(e.target.value)}
+        />
       </div>
       <div style={styles.centered}>
         <TextField
+          value={pass}
           placeholder="Password"
           inputProps={inputProps}
+          type={"password"}
           size="small"
+          onChange={(e) => setPass(e.target.value)}
         />
       </div>
       <div>
@@ -51,6 +71,7 @@ const Login = (props) => {
             fontWeight: "bold",
             textTransform: "none",
           }}
+          onClick={handleLogin}
         >
           Login
         </Button>
