@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, TextField } from "@mui/material";
+import PlanerizeIcon from "../../static/PlanerizeIcon.png";
 
 const styles = {
   container: {
@@ -7,13 +8,13 @@ const styles = {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    height: "100vh", // Set the container height to fill the viewport
+    height: "100vh",
   },
   centered: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: "16px", // Optional: Add some space between the text fields
+    marginBottom: "16px",
   },
 };
 
@@ -22,19 +23,34 @@ const Register = (props) => {
     style: {
       color: "gray",
       background: "white",
+      borderRadius: 10,
+      border: "none", // Remove the solid border
     },
   };
+
   return (
     <div style={styles.container}>
       <div style={styles.centered}>
-        <TextField placeholder="Email" inputProps={inputProps} />
+        <img src={PlanerizeIcon} alt="Planerize Icon" />
       </div>
       <div style={styles.centered}>
-        <TextField placeholder="Password" inputProps={inputProps} />
+        <TextField
+          placeholder="Full Name"
+          inputProps={inputProps}
+          size="small"
+        />
       </div>
-      <div>
-        <Button>Login</Button>
+      <div style={styles.centered}>
+        <TextField placeholder="Email" inputProps={inputProps} size="small" />
       </div>
+      <div style={styles.centered}>
+        <TextField
+          placeholder="Password"
+          inputProps={inputProps}
+          size="small"
+        />
+      </div>
+
       <div>
         <span>
           <Button onClick={props.handleSwitchRegister}>Register</Button>
