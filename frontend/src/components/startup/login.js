@@ -21,7 +21,7 @@ const styles = {
 const Login = (props) => {
   const inputProps = {
     style: {
-      color: "gray",
+      color: "#5B5B5B",
       background: "white",
       borderRadius: 10,
       border: "none", // Remove the solid border
