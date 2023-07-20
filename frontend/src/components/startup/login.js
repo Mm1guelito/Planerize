@@ -17,17 +17,23 @@ const styles = {
   },
 };
 
-const Login = (props) => {
+const Login = () => {
+  const inputProps = {
+    style: {
+      color: "gray", // Change the text color to white
+      background: "white", // Make the background transparent
+    },
+  };
   return (
     <div style={styles.container}>
       <div style={styles.centered}>
-        <TextField placeholder="Email" />
+        <TextField placeholder="Email" inputProps={inputProps} />
       </div>
       <div style={styles.centered}>
-        <TextField placeholder="Password" />
+        <TextField placeholder="Password" inputProps={inputProps} />
       </div>
       <div>
-        <Button onClick={props.handleSwitchRegister}>Login</Button>
+        <Button>Login</Button>
       </div>
       <div>
         <Button>Register</Button>
