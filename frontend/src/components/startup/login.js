@@ -20,8 +20,8 @@ const styles = {
 const Login = () => {
   const inputProps = {
     style: {
-      color: "gray", // Change the text color to white
-      background: "white", // Make the background transparent
+      color: "gray",
+      background: "white",
     },
   };
   return (
