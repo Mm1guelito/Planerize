@@ -18,16 +18,27 @@ const styles = {
 };
 
 const Register = (props) => {
+  const inputProps = {
+    style: {
+      color: "gray",
+      background: "white",
+    },
+  };
   return (
     <div style={styles.container}>
       <div style={styles.centered}>
-        <TextField placeholder="Email" />
+        <TextField placeholder="Email" inputProps={inputProps} />
       </div>
       <div style={styles.centered}>
-        <TextField placeholder="Password" />
+        <TextField placeholder="Password" inputProps={inputProps} />
       </div>
       <div>
-        <Button>Register</Button>
+        <Button>Login</Button>
+      </div>
+      <div>
+        <span>
+          <Button onClick={props.handleSwitchRegister}>Register</Button>
+        </span>
       </div>
     </div>
   );

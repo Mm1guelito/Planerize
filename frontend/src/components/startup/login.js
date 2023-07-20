@@ -17,7 +17,7 @@ const styles = {
   },
 };
 
-const Login = () => {
+const Login = (props) => {
   const inputProps = {
     style: {
       color: "gray",
@@ -37,7 +37,8 @@ const Login = () => {
       </div>
       <div>
         <span>
-          Not yet a member?<Button>Register</Button>
+          Not yet a member?
+          <Button onClick={props.handleSwitchRegister}>Register</Button>
         </span>
       </div>
     </div>
