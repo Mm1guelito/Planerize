@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, TextField } from "@mui/material";
 import PlanerizeIcon from "../../static/PlanerizeIcon.png";
+import { useNavigate } from "react-router-dom";
 
 const styles = {
   container: {
@@ -26,6 +27,13 @@ const Register = (props) => {
       borderRadius: 10,
       border: "none", // Remove the solid border
     },
+  };
+  const navigate = useNavigate(); // Get the navigate function from useNavigate
+
+  // Function to handle the "Register" button click and redirect to MainDashboard
+  const handleSwitchRegister = () => {
+    // Assuming "/main-dashboard" is the path to the MainDashboard component
+    navigate("/main-dashboard");
   };
 
   return (
@@ -53,7 +61,7 @@ const Register = (props) => {
 
       <div>
         <span>
-          <Button onClick={props.handleSwitchRegister}>Register</Button>
+          <Button onClick={handleSwitchRegister}>Register</Button>
         </span>
       </div>
     </div>
