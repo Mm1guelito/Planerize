@@ -5,16 +5,19 @@ import {
   Toolbar,
   Typography,
   Drawer,
-  List,
-  ListItem,
-  ListItemText,
   Grid,
   Avatar,
   Dialog,
   Slide,
 } from "@mui/material";
+
 import DashboardIcon from "../../static/DashboardIcon.png";
-const drawerWidth = 240;
+import DashboardLogo from "../../static/dashboardLogo.png";
+import AddIcon from "../../static/addIcon.png";
+import Workpace from "../../static/workspaceIcon.png";
+import AddWorkspaceModal from "./AddWorkspaceModal";
+
+const drawerWidth = 270;
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
@@ -23,6 +26,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 class MainDashboard extends Component {
   state = {
     isDialogOpen: false,
+    isAddWorkspaceOpen: false,
+    mockWorkspaceData: ["Workpace-001", "Workpace-002"],
+    workspaceToAdd: "",
   };
 
   handleAvatarClick = () => {
@@ -32,10 +38,41 @@ class MainDashboard extends Component {
   handleDialogClose = () => {
     this.setState({ isDialogOpen: false });
   };
+
+  handleToggleAddWorkspaceModal() {
+    this.setState({ isAddWorkspaceOpen: !this.state.isAddWorkspaceOpen });
+  }
+
+  handleAddWorkspace() {
+    console.log("triggerd");
+    const { workspaceToAdd, mockWorkspaceData } = this.state;
+    if (workspaceToAdd.trim() !== "") {
+      // Check if the workspaceToAdd is not an empty string or contains only whitespaces
+      this.setState({
+        mockWorkspaceData: [...mockWorkspaceData, workspaceToAdd], // Add the new workspace to the array
+        workspaceToAdd: "", // Clear the workspaceToAdd after adding it to the array
+        isAddWorkspaceOpen: false,
+      });
+    }
+  }
+
+  handleChangeWorkspaceValue = (value) => {
+    console.log(value);
+    this.setState({ workspaceToAdd: value });
+  };
   render() {
     const { isDialogOpen } = this.state;
     return (
       <React.Fragment>
+        <AddWorkspaceModal
+          workspaceToAdd={this.state.workspaceToAdd}
+          isAddWorkspaceOpen={this.state.isAddWorkspaceOpen}
+          handleChangeWorkspaceValue={this.handleChangeWorkspaceValue}
+          handleAddWorkspace={this.handleAddWorkspace.bind(this)}
+          handleToggleAddWorkspaceModal={this.handleToggleAddWorkspaceModal.bind(
+            this
+          )}
+        />
         <Dialog
           open={isDialogOpen}
           onClose={this.handleDialogClose}
@@ -51,7 +88,6 @@ class MainDashboard extends Component {
             },
           }}
         >
-          {/* Add your content for the dialog here */}
           <div>Dialog Content</div>
         </Dialog>
         <CssBaseline />
@@ -59,7 +95,7 @@ class MainDashboard extends Component {
         <AppBar
           position="fixed"
           sx={{
-            zIndex: (theme) => theme.zIndex.drawer + 1,
+            zIndex: (theme) => theme.zIndex.drawer + 0,
             bgcolor: "#202324",
           }}
         >
@@ -86,20 +122,98 @@ class MainDashboard extends Component {
             [`& .MuiDrawer-paper`]: {
               width: drawerWidth,
               boxSizing: "border-box",
+              backgroundColor: "#202324",
             },
           }}
         >
-          <Toolbar />
-          <List>
-            {/* Add your sidebar items here */}
-            <ListItem button>
-              <ListItemText primary="Item 1" />
-            </ListItem>
-            <ListItem button>
-              <ListItemText primary="Item 2" />
-            </ListItem>
-            {/* Add more items as needed */}
-          </List>
+          <Toolbar>
+            <img src={DashboardIcon} alt="Dashboard Icon" />
+          </Toolbar>
+          <div
+            style={{
+              borderTop: "1px solid #4977BC",
+              margin: "0px 10px 0px 10px",
+            }}
+          />
+          <div
+            style={{
+              margin: "5px 10px 0px 10px",
+              height: 250,
+            }}
+          >
+            <Grid container spacing={0} style={{ marginTop: 10 }}>
+              <Grid item xs={1}>
+                <img src={DashboardLogo} alt="Dashboard Logo" />
+              </Grid>
+              <Grid item xs={7}>
+                <div
+                  style={{
+                    color: "white",
+                    float: "left",
+                    marginLeft: 5,
+                    fontWeight: "bold",
+                  }}
+                >
+                  Dashboard
+                </div>
+              </Grid>
+            </Grid>
+          </div>
+          <div
+            style={{
+              borderBottom: "1px solid #4977BC",
+              margin: "5px 10px 0px 10px",
+            }}
+          >
+            <Grid container spacing={0}>
+              <Grid item xs={6}>
+                <div style={{ color: "white", fontWeight: "bolder" }}>
+                  Your workspace
+                </div>
+              </Grid>
+              <Grid item xs={6}>
+                <div style={{ float: "right" }}>
+                  <img
+                    src={AddIcon}
+                    alt="Add Workspace"
+                    onClick={() => this.handleToggleAddWorkspaceModal()}
+                  />
+                </div>
+              </Grid>
+            </Grid>
+          </div>
+          <div
+            style={{
+              margin: "5px 10px 0px 10px",
+            }}
+          >
+            {this.state.mockWorkspaceData.map((i) => {
+              return (
+                <React.Fragment>
+                  <Grid container spacing={0} style={{ marginTop: 10 }}>
+                    <Grid item xs={1}>
+                      <img
+                        src={Workpace}
+                        alt="Add Workspace"
+                        onClick={() => this.handleToggleAddWorkspaceModal()}
+                      />
+                    </Grid>
+                    <Grid item xs={7}>
+                      <div
+                        style={{ color: "white", float: "left", marginLeft: 5 }}
+                      >
+                        {i}
+                      </div>
+                    </Grid>
+
+                    <Grid item xs={4}>
+                      <div style={{ float: "right", color: "white" }}>...</div>
+                    </Grid>
+                  </Grid>
+                </React.Fragment>
+              );
+            })}
+          </div>
         </Drawer>
 
         {/* Main content */}
