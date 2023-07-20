@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, TextField } from "@mui/material";
 import PlanerizeIcon from "../../static/PlanerizeIcon.png";
+import { useNavigate } from "react-router-dom";
 
 const styles = {
   container: {
@@ -27,6 +28,12 @@ const Login = (props) => {
       border: "none", // Remove the solid border
     },
   };
+  const navigate = useNavigate(); // Get the navigate function
+
+  const handleLogin = () => {
+    // Assuming "/main-dashboard" is the path to the MainDashboard component
+    navigate("/main-dashboard");
+  };
 
   return (
     <div style={styles.container}>
@@ -44,7 +51,7 @@ const Login = (props) => {
         />
       </div>
       <div>
-        <Button>Login</Button>
+        <Button onClick={handleLogin}>Login</Button>
       </div>
       <div>
         <span>
