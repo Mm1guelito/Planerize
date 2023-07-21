@@ -1,14 +1,67 @@
 import React, { Component } from "react";
-import { Grid, Paper } from "@mui/material";
+import {
+  Grid,
+  Paper,
+  Avatar,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Typography,
+} from "@mui/material";
 import Workspace from "../../../static/workspaceIcon.png";
 import AddIcon from "../../../static/addIcon.png";
+import MemberIcon from "../../../static/membersIcon.png";
+import NewMemberModal from "./NewMemberModal";
 class MainWorkspace extends Component {
-  state = {};
+  state = {
+    members: [
+      {
+        id: 1,
+        avatarUrl: "avatar_url_1",
+        name: "Migs Evangelista",
+        email: "@migsevangelista",
+        boards: 2,
+      },
+      {
+        id: 2,
+        avatarUrl: "avatar_url_2",
+        name: "Marjoe Velasco",
+        email: "@marjoevelasco1",
+        boards: 1,
+      },
+      {
+        id: 3,
+        avatarUrl: "avatar_url_3",
+        name: "Kervin Lara",
+        email: "@kervs83",
+        boards: 1,
+      },
+    ],
+    memberToAdd: "",
+    isAddMemberOpen: false,
+  };
+
+  handleToggleAddMemberModal() {
+    this.setState({ isAddMemberOpen: !this.state.isAddMemberOpen });
+  }
+
+  handleChangeMemberValue = (value) => {
+    this.setState({ memberToAdd: value });
+  };
 
   render() {
     let numberOfPapers = 9 - this.props.mockWorkspaceData.length;
     return (
       <React.Fragment>
+        <NewMemberModal
+          memberToAdd={this.state.memberToAdd}
+          isAddMemberOpen={this.state.isAddMemberOpen}
+          handleChangeMemberValue={this.handleChangeMemberValue}
+          handleToggleAddMemberModal={this.handleToggleAddMemberModal.bind(
+            this
+          )}
+        />
         <Grid container spacing={2}>
           <Grid item>
             <img src={Workspace} alt="Add Workspace" />
@@ -29,7 +82,9 @@ class MainWorkspace extends Component {
                     height: 100,
                     position: "relative",
                     borderRadius: 15,
+                    cursor: "pointer",
                   }}
+                  onClick={this.props.handleChooseWorkspace}
                 >
                   <div
                     style={{
@@ -74,16 +129,27 @@ class MainWorkspace extends Component {
         />
         <Grid container spacing={0}>
           <Grid item xs={6}>
-            <div
-              style={{
-                color: "white",
-                float: "left",
-                marginLeft: 5,
-                fontWeight: "bold",
-              }}
-            >
-              Workspace Members
-            </div>
+            <Grid container spacing={2}>
+              <Grid item>
+                <div>
+                  <img
+                    src={MemberIcon}
+                    alt="Member Icon"
+                    onClick={() => this.handleToggleAddMemberModal()}
+                  />
+                </div>
+              </Grid>
+              <Grid item>
+                <div
+                  style={{
+                    color: "white",
+                    fontWeight: "bolder",
+                  }}
+                >
+                  Workspace Members
+                </div>
+              </Grid>
+            </Grid>
           </Grid>
           <Grid item xs={6}>
             <div style={{ float: "right" }}>
@@ -103,7 +169,7 @@ class MainWorkspace extends Component {
                     <img
                       src={AddIcon}
                       alt="Add Workspace"
-                      onClick={() => this.handleToggleAddWorkspaceModal()}
+                      onClick={() => this.handleToggleAddMemberModal()}
                     />
                   </div>
                 </Grid>
@@ -111,6 +177,64 @@ class MainWorkspace extends Component {
             </div>
           </Grid>
         </Grid>
+        <div
+          style={{
+            marginTop: 20,
+            marginLeft: 30,
+            marginRight: 20,
+            maxHeight: 230,
+          }}
+        >
+          {this.state.members.map((member, index) => (
+            <List key={index} style={{ marginBottom: 10 }}>
+              <ListItem alignItems="flex-start">
+                {/* Replace 'avatarUrl' with the URL of the member's avatar */}
+                <ListItemAvatar>
+                  <Avatar alt="Avatar" src={member.avatarUrl} />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <Typography
+                      component="span"
+                      variant="body2"
+                      style={{ display: "block", color: "white" }} // Change member.name text color here
+                    >
+                      {member.name}
+                    </Typography>
+                  }
+                  secondary={
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        borderBottom: "1px solid #ccc",
+                      }}
+                    >
+                      <div>
+                        <Typography
+                          component="span"
+                          variant="body2"
+                          style={{ display: "block", color: "white" }}
+                        >
+                          {member.email}
+                        </Typography>
+                      </div>
+                      <div>
+                        <Typography
+                          component="span"
+                          variant="body2"
+                          color="white"
+                        >
+                          on {member.boards} board
+                        </Typography>
+                      </div>
+                    </div>
+                  }
+                />
+              </ListItem>
+            </List>
+          ))}
+        </div>
       </React.Fragment>
     );
   }

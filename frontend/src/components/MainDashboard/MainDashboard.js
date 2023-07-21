@@ -18,6 +18,7 @@ import AvatarModal from "./AvatarModal";
 import MainWorkspace from "./Workspace/MainWorkspace";
 
 import "./MainDashboard.css";
+import MainWorkspaceDetails from "./Workspace/WorkspaceDetails/MainWorkspaceDetails";
 
 const drawerWidth = 270;
 
@@ -31,6 +32,7 @@ class MainDashboard extends Component {
     isAddWorkspaceOpen: false,
     mockWorkspaceData: ["Workspace-001", "Workspace-002", "Workspace-003"],
     workspaceToAdd: "",
+    currentWorkspaceUI: false,
   };
 
   handleAvatarClick = () => {
@@ -63,6 +65,14 @@ class MainDashboard extends Component {
       console.log("updated value", this.state.workspaceToAdd);
     });
   };
+
+  handleChooseWorkspace = () => {
+    this.setState({ currentWorkspaceUI: true });
+  };
+  handleBackToDashboard = () => {
+    this.setState({ currentWorkspaceUI: false });
+  };
+
   render() {
     const { isDialogOpen } = this.state;
     return (
@@ -115,7 +125,12 @@ class MainDashboard extends Component {
           }}
         >
           <Toolbar>
-            <img src={DashboardIcon} alt="Dashboard Icon" />
+            <img
+              src={DashboardIcon}
+              alt="Dashboard Icon"
+              style={{ cursor: "pointer" }}
+              onClick={this.handleBackToDashboard}
+            />
           </Toolbar>
           <div
             style={{
@@ -215,7 +230,14 @@ class MainDashboard extends Component {
         >
           <Toolbar />
           <div>
-            <MainWorkspace mockWorkspaceData={this.state.mockWorkspaceData} />
+            {this.state.currentWorkspaceUI === false ? (
+              <MainWorkspace
+                mockWorkspaceData={this.state.mockWorkspaceData}
+                handleChooseWorkspace={this.handleChooseWorkspace.bind(this)}
+              />
+            ) : (
+              <MainWorkspaceDetails />
+            )}
           </div>
         </div>
       </React.Fragment>
