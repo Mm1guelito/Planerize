@@ -3,19 +3,21 @@ import {
   CssBaseline,
   AppBar,
   Toolbar,
-  Typography,
   Drawer,
   Grid,
   Avatar,
-  Dialog,
   Slide,
 } from "@mui/material";
 
 import DashboardIcon from "../../static/DashboardIcon.png";
 import DashboardLogo from "../../static/dashboardLogo.png";
 import AddIcon from "../../static/addIcon.png";
-import Workpace from "../../static/workspaceIcon.png";
+import Workspace from "../../static/workspaceIcon.png";
 import AddWorkspaceModal from "./AddWorkspaceModal";
+import AvatarModal from "./AvatarModal";
+import MainWorkspace from "./Workspace/MainWorkspace";
+
+import "./MainDashboard.css";
 
 const drawerWidth = 270;
 
@@ -27,7 +29,7 @@ class MainDashboard extends Component {
   state = {
     isDialogOpen: false,
     isAddWorkspaceOpen: false,
-    mockWorkspaceData: ["Workpace-001", "Workpace-002"],
+    mockWorkspaceData: ["Workspace-001", "Workspace-002", "Workspace-003"],
     workspaceToAdd: "",
   };
 
@@ -35,9 +37,9 @@ class MainDashboard extends Component {
     this.setState({ isDialogOpen: true });
   };
 
-  handleDialogClose = () => {
+  handleDialogClose() {
     this.setState({ isDialogOpen: false });
-  };
+  }
 
   handleToggleAddWorkspaceModal() {
     this.setState({ isAddWorkspaceOpen: !this.state.isAddWorkspaceOpen });
@@ -47,10 +49,9 @@ class MainDashboard extends Component {
     console.log("triggerd");
     const { workspaceToAdd, mockWorkspaceData } = this.state;
     if (workspaceToAdd.trim() !== "") {
-      // Check if the workspaceToAdd is not an empty string or contains only whitespaces
       this.setState({
-        mockWorkspaceData: [...mockWorkspaceData, workspaceToAdd], // Add the new workspace to the array
-        workspaceToAdd: "", // Clear the workspaceToAdd after adding it to the array
+        mockWorkspaceData: [...mockWorkspaceData, workspaceToAdd],
+        workspaceToAdd: "",
         isAddWorkspaceOpen: false,
       });
     }
@@ -58,7 +59,9 @@ class MainDashboard extends Component {
 
   handleChangeWorkspaceValue = (value) => {
     console.log(value);
-    this.setState({ workspaceToAdd: value });
+    this.setState({ workspaceToAdd: value }, () => {
+      console.log("updated value", this.state.workspaceToAdd);
+    });
   };
   render() {
     const { isDialogOpen } = this.state;
@@ -73,25 +76,12 @@ class MainDashboard extends Component {
             this
           )}
         />
-        <Dialog
-          open={isDialogOpen}
-          onClose={this.handleDialogClose}
-          TransitionComponent={Transition}
-          PaperProps={{
-            style: {
-              position: "absolute",
-              top: 0,
-              right: 0,
-              margin: "1rem",
-              maxWidth: "300px", // Customize the maximum width of the dialog
-              backgroundColor: "#fff", // Customize the background color
-            },
-          }}
-        >
-          <div>Dialog Content</div>
-        </Dialog>
+        <AvatarModal
+          handleDialogClose={this.handleDialogClose.bind(this)}
+          isDialogOpen={isDialogOpen}
+          Transition={Transition}
+        />
         <CssBaseline />
-        {/* Appbar */}
         <AppBar
           position="fixed"
           sx={{
@@ -112,8 +102,6 @@ class MainDashboard extends Component {
             </Grid>
           </Grid>
         </AppBar>
-
-        {/* Sidebar */}
         <Drawer
           variant="permanent"
           sx={{
@@ -193,7 +181,7 @@ class MainDashboard extends Component {
                   <Grid container spacing={0} style={{ marginTop: 10 }}>
                     <Grid item xs={1}>
                       <img
-                        src={Workpace}
+                        src={Workspace}
                         alt="Add Workspace"
                         onClick={() => this.handleToggleAddWorkspaceModal()}
                       />
@@ -217,16 +205,19 @@ class MainDashboard extends Component {
         </Drawer>
 
         {/* Main content */}
-        <main sx={{ flexGrow: 1, p: 3, mt: 8, ml: drawerWidth }}>
+        <div
+          id="main-content-container"
+          style={{
+            marginLeft: drawerWidth,
+            backgroundColor: "#353D41",
+            padding: "50px 100px 50px 100px",
+          }}
+        >
           <Toolbar />
-          <Typography paragraph>
-            {/* Your main content goes here */}
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
-          </Typography>
-        </main>
+          <div>
+            <MainWorkspace mockWorkspaceData={this.state.mockWorkspaceData} />
+          </div>
+        </div>
       </React.Fragment>
     );
   }

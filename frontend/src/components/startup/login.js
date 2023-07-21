@@ -25,17 +25,16 @@ const Login = (props) => {
       color: "#5B5B5B",
       background: "white",
       borderRadius: 10,
-      border: "none", // Remove the solid border
+      border: "none",
     },
   };
 
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
 
-  const navigate = useNavigate(); // Get the navigate function
+  const navigate = useNavigate();
 
   const handleLogin = () => {
-    // Assuming "/main-dashboard" is the path to the MainDashboard component
     navigate("/main-dashboard");
   };
 

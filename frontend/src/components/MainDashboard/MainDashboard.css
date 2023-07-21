@@ -1,0 +1,17 @@
+/* styles.css (or your preferred CSS file) */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Optional: Hide any content that might overflow the page */
+  background-color: #353D41;
+}
+
+/* Set the main content container to fill the remaining height */
+#main-content-container {
+  height: calc(100% - 64px); /* 64px is the height of the AppBar (Toolbar) */
+  overflow-y: auto; /* Add vertical scrollbar if content overflows */
+  background-color: #353D41;
+}
