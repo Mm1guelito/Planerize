@@ -8,11 +8,12 @@ import {
   Avatar,
   Slide,
 } from "@mui/material";
-
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import DashboardIcon from "../../static/DashboardIcon.png";
 import DashboardLogo from "../../static/dashboardLogo.png";
 import AddIcon from "../../static/addIcon.png";
 import Workspace from "../../static/workspaceIcon.png";
+
 import AddWorkspaceModal from "./AddWorkspaceModal";
 import AvatarModal from "./AvatarModal";
 import MainWorkspace from "./Workspace/MainWorkspace";
@@ -102,7 +103,14 @@ class MainDashboard extends Component {
         >
           <Grid container spacing={0}>
             <Grid item xs={6}>
-              <div style={{ paddingRight: 250, paddingTop: 15, fontSize: 20 }}>
+              <div
+                style={{
+                  marginLeft: 280,
+                  paddingTop: 15,
+                  fontSize: 20,
+                  float: "left",
+                }}
+              >
                 {this.state.chosenWorkspace}
               </div>
             </Grid>
@@ -198,24 +206,45 @@ class MainDashboard extends Component {
                     container
                     spacing={0}
                     style={{ marginTop: 10, cursor: "pointer" }}
+                    onClick={() => this.handleChooseWorkspace(i)}
                   >
                     <Grid item xs={1}>
-                      <img
-                        src={Workspace}
-                        alt="Add Workspace"
-                        onClick={() => this.handleToggleAddWorkspaceModal()}
-                      />
+                      <img src={Workspace} alt="Workspace" />
                     </Grid>
-                    <Grid item xs={7}>
+                    <Grid
+                      item
+                      xs={7}
+                      style={{
+                        backgroundColor:
+                          this.state.chosenWorkspace === i
+                            ? "#969696"
+                            : "transparent",
+                      }}
+                    >
                       <div
-                        style={{ color: "white", float: "left", marginLeft: 5 }}
+                        style={{
+                          color: "white",
+                          float: "left",
+                          marginLeft: 5,
+                          paddingBottom: 2,
+                        }}
                       >
                         {i}
                       </div>
                     </Grid>
-
-                    <Grid item xs={4}>
-                      <div style={{ float: "right", color: "white" }}>...</div>
+                    <Grid
+                      item
+                      xs={4}
+                      style={{
+                        backgroundColor:
+                          this.state.chosenWorkspace === i
+                            ? "#969696"
+                            : "transparent",
+                      }}
+                    >
+                      <div style={{ float: "right", color: "white" }}>
+                        <MoreHorizIcon />
+                      </div>
                     </Grid>
                   </Grid>
                 </React.Fragment>
