@@ -193,7 +193,11 @@ class MainDashboard extends Component {
             {this.state.mockWorkspaceData.map((i) => {
               return (
                 <React.Fragment>
-                  <Grid container spacing={0} style={{ marginTop: 10 }}>
+                  <Grid
+                    container
+                    spacing={0}
+                    style={{ marginTop: 10, cursor: "pointer" }}
+                  >
                     <Grid item xs={1}>
                       <img
                         src={Workspace}
