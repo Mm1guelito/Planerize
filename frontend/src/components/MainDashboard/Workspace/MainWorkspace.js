@@ -132,11 +132,7 @@ class MainWorkspace extends Component {
             <Grid container spacing={2}>
               <Grid item>
                 <div>
-                  <img
-                    src={MemberIcon}
-                    alt="Member Icon"
-                    onClick={() => this.handleToggleAddMemberModal()}
-                  />
+                  <img src={MemberIcon} alt="Member Icon" />
                 </div>
               </Grid>
               <Grid item>
@@ -168,7 +164,7 @@ class MainWorkspace extends Component {
                   <div>
                     <img
                       src={AddIcon}
-                      alt="Add Workspace"
+                      alt="Add Member"
                       onClick={() => this.handleToggleAddMemberModal()}
                     />
                   </div>

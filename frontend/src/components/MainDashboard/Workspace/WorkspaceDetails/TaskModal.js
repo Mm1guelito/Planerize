@@ -18,11 +18,15 @@ import CardIcon from "../../../../static/cardIcon.png";
 import AddIcon from "../../../../static/addIcon.png";
 import DescIcon from "../../../../static/descIicon.png";
 import DeleteActModal from "./DeleteActModal";
+import NewTaskMemberModal from "./NewTaskMemberModal";
 
 const theme = createTheme({
   palette: {
-    customColor: {
+    customColorLess: {
       main: "#FB923C",
+    },
+    customColorMore: {
+      main: "#159D72",
     },
   },
 });
@@ -36,6 +40,8 @@ class TaskModal extends Component {
     isDeleteActOpen: false,
     itemToDelete: null,
     isTaskModalOpen: true,
+    memberToAdd: "",
+    isAddMemberOpen: false,
     listOfMembers: ["ME", "MV", "KL"],
     listOfTasks: [
       {
@@ -138,7 +144,7 @@ class TaskModal extends Component {
           listOfTasks: [...prevState.listOfTasks, task],
         }),
         () => {
-          this.setState({ isTaskTextFieldVis: false });
+          this.setState({ taskToAdd: "", isTaskTextFieldVis: false });
         }
       );
     }
@@ -198,11 +204,30 @@ class TaskModal extends Component {
 
     return Math.round((completedTasks / totalTasks) * 100);
   }
+  handleToggleAddMemberModal() {
+    this.setState({
+      isAddMemberOpen: !this.state.isAddMemberOpen,
+      isTaskModalOpen: !this.state.isTaskModalOpen,
+    });
+  }
+
+  handleChangeMemberValue = (value) => {
+    this.setState({ memberToAdd: value });
+  };
 
   render() {
     return (
       <React.Fragment>
         <ThemeProvider theme={theme}>
+          <NewTaskMemberModal
+            buttonText={"Add"}
+            memberToAdd={this.state.memberToAdd}
+            isAddMemberOpen={this.state.isAddMemberOpen}
+            handleChangeMemberValue={this.handleChangeMemberValue}
+            handleToggleAddMemberModal={this.handleToggleAddMemberModal.bind(
+              this
+            )}
+          />
           <DeleteActModal
             isDeleteActOpen={this.state.isDeleteActOpen}
             handleToggleDeleteActModal={this.handleToggleDeleteActModal.bind(
@@ -289,7 +314,11 @@ class TaskModal extends Component {
                     <div style={{ marginLeft: 20, marginTop: 15 }}>
                       <Grid container spacing={2} style={{ cursor: "pointer" }}>
                         <Grid item>
-                          <img src={AddIcon} alt="Add Workspace" />
+                          <img
+                            src={AddIcon}
+                            alt="Add Member"
+                            onClick={() => this.handleToggleAddMemberModal()}
+                          />
                         </Grid>
                         <Grid item>Add Member</Grid>
                       </Grid>
@@ -359,7 +388,11 @@ class TaskModal extends Component {
                       <LinearProgress
                         variant="determinate"
                         value={this.getProgressPercentage()}
-                        color="customColor"
+                        color={
+                          this.getProgressPercentage() > 50
+                            ? "customColorMore"
+                            : "customColorLess"
+                        }
                         style={{ marginBottom: 10, width: 450 }}
                       />
                       <div>
@@ -400,6 +433,7 @@ class TaskModal extends Component {
                         })}
                       </div>
                       <TextField
+                        value={this.state.taskToAdd}
                         InputProps={{
                           style: {
                             backgroundColor: "#FFFFFF",
