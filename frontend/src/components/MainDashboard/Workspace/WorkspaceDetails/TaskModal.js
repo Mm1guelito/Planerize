@@ -259,6 +259,7 @@ class TaskModal extends Component {
                           boxSizing: "border-box",
                           backgroundColor: "#CA5369",
                           float: "right",
+                          cursor: "pointer",
                         }}
                         onClick={this.props.handleAddTask}
                       >
