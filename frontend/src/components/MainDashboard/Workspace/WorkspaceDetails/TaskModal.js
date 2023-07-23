@@ -22,7 +22,7 @@ import DeleteActModal from "./DeleteActModal";
 const theme = createTheme({
   palette: {
     customColor: {
-      main: "#FB923C", // Your desired color goes here
+      main: "#FB923C",
     },
   },
 });
@@ -193,7 +193,7 @@ class TaskModal extends Component {
     ).length;
 
     if (totalTasks === 0) {
-      return 0; // To avoid division by zero
+      return 0;
     }
 
     return Math.round((completedTasks / totalTasks) * 100);

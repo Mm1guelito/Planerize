@@ -1,5 +1,3 @@
-// DeleteActModal.js
-
 import React, { Component } from "react";
 import { Dialog, DialogContent, Button } from "@mui/material";
 

@@ -223,7 +223,6 @@ class MainDashboard extends Component {
           </div>
         </Drawer>
 
-        {/* Main content */}
         <div
           id="main-content-container"
           style={{

@@ -103,7 +103,6 @@ class MainWorkspaceDetails extends Component {
       id: this.state.tasks.length + 1,
     };
 
-    // Update the state to add the new card to the tasks array
     this.setState((prevState) => ({
       tasks: [...prevState.tasks, newCard],
     }));

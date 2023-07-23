@@ -7,7 +7,7 @@ const MainStartUp = () => {
 
   const handleSwitchRegister = () => {
     setIsLogin(false);
-    console.log(isLogin); // Note: This log will show the previous state value due to closure.
+    console.log(isLogin);
   };
 
   return (

@@ -25,14 +25,12 @@ const Register = (props) => {
       color: "gray",
       background: "white",
       borderRadius: 10,
-      border: "none", // Remove the solid border
+      border: "none",
     },
   };
-  const navigate = useNavigate(); // Get the navigate function from useNavigate
+  const navigate = useNavigate();
 
-  // Function to handle the "Register" button click and redirect to MainDashboard
   const handleSwitchRegister = () => {
-    // Assuming "/main-dashboard" is the path to the MainDashboard component
     navigate("/main-dashboard");
   };
 

@@ -188,7 +188,6 @@ class MainWorkspace extends Component {
           {this.state.members.map((member, index) => (
             <List key={index} style={{ marginBottom: 10 }}>
               <ListItem alignItems="flex-start">
-                {/* Replace 'avatarUrl' with the URL of the member's avatar */}
                 <ListItemAvatar>
                   <Avatar alt="Avatar" src={member.avatarUrl} />
                 </ListItemAvatar>
@@ -197,7 +196,7 @@ class MainWorkspace extends Component {
                     <Typography
                       component="span"
                       variant="body2"
-                      style={{ display: "block", color: "white" }} // Change member.name text color here
+                      style={{ display: "block", color: "white" }}
                     >
                       {member.name}
                     </Typography>
