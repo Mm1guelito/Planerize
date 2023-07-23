@@ -84,7 +84,7 @@ class MainWorkspace extends Component {
                     borderRadius: 15,
                     cursor: "pointer",
                   }}
-                  onClick={this.props.handleChooseWorkspace}
+                  onClick={() => this.props.handleChooseWorkspace(i)}
                 >
                   <div
                     style={{

@@ -32,6 +32,7 @@ class MainDashboard extends Component {
     isAddWorkspaceOpen: false,
     mockWorkspaceData: ["Workspace-001", "Workspace-002", "Workspace-003"],
     workspaceToAdd: "",
+    chosenWorkspace: "",
     currentWorkspaceUI: false,
   };
 
@@ -66,11 +67,11 @@ class MainDashboard extends Component {
     });
   };
 
-  handleChooseWorkspace = () => {
-    this.setState({ currentWorkspaceUI: true });
-  };
+  handleChooseWorkspace(i) {
+    this.setState({ currentWorkspaceUI: true, chosenWorkspace: i });
+  }
   handleBackToDashboard = () => {
-    this.setState({ currentWorkspaceUI: false });
+    this.setState({ currentWorkspaceUI: false, chosenWorkspace: "" });
   };
 
   render() {
@@ -101,9 +102,9 @@ class MainDashboard extends Component {
         >
           <Grid container spacing={0}>
             <Grid item xs={6}>
-              <Toolbar>
-                <img src={DashboardIcon} alt="Dashboard Icon" />
-              </Toolbar>
+              <div style={{ paddingRight: 250, paddingTop: 15, fontSize: 20 }}>
+                {this.state.chosenWorkspace}
+              </div>
             </Grid>
             <Grid item xs={6}>
               <Toolbar style={{ float: "right" }}>
