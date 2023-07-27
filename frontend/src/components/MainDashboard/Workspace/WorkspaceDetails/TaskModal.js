@@ -366,7 +366,7 @@ class TaskModal extends Component {
                         }}
                         multiline
                         rows={4}
-                        defaultValue="Add a more detailed description..."
+                        placeholder="Add a more detailed description..."
                       />
                     </div>
                     <Grid container spacing={2}>
