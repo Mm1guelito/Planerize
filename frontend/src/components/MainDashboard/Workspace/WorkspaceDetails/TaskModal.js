@@ -316,6 +316,7 @@ const TaskModal = (props) => {
                         marginTop: 10,
                       }}
                     >
+<<<<<<< HEAD
                       <AvatarGroup max={4}>
                         {listOfMembers.map((i) => (
                           <Avatar alt={i} style={{ fontSize: 10 }}>
@@ -323,6 +324,19 @@ const TaskModal = (props) => {
                           </Avatar>
                         ))}
                       </AvatarGroup>
+=======
+                      <TextField
+                        InputProps={{
+                          style: {
+                            backgroundColor: "#FFFFFF",
+                            width: 450,
+                          },
+                        }}
+                        multiline
+                        rows={4}
+                        placeholder="Add a more detailed description..."
+                      />
+>>>>>>> 327999def452878d5478ff00a44b1f3218eadd03
                     </div>
                   </div>
                 </DialogContent>
