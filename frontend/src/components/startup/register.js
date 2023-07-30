@@ -40,7 +40,6 @@ const Register = (props) => {
   };
 
   const handleRegister = () => {
-    console.log("triggered");
     const url = `${apiUrl}/v1/auth/register`;
 
     const payload = {
@@ -56,11 +55,13 @@ const Register = (props) => {
       },
       body: JSON.stringify(payload),
     };
-    console.log(url, requestOptions);
     fetch(url, requestOptions)
       .then((response) => response.json())
       .then((messageData) => {
-        console.log("payload, response", payload, messageData);
+        if (messageData.message === "User registered successfully") {
+          navigate("/main-dashboard");
+        } else {
+        }
       })
       .catch((error) => {
         console.error("Error:", error);
