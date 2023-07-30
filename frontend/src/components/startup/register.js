@@ -59,6 +59,12 @@ const Register = (props) => {
       .then((response) => response.json())
       .then((messageData) => {
         if (messageData.message === "User registered successfully") {
+          sessionStorage.setItem("token", messageData.token);
+          const token = messageData.token;
+          const decodedToken = JSON.parse(atob(token.split(".")[1]));
+          sessionStorage.setItem("accountName", decodedToken.name);
+          sessionStorage.setItem("userId", decodedToken.userId);
+          sessionStorage.setItem("email", email);
           navigate("/main-dashboard");
         } else {
         }

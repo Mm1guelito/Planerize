@@ -13,6 +13,11 @@ import { useNavigate } from "react-router-dom";
 function AvatarModal(props) {
   const navigate = useNavigate();
 
+  const handleLogout = () => {
+    sessionStorage.clear();
+    navigate("/");
+  };
+
   return (
     <React.Fragment>
       <Dialog
@@ -47,7 +52,7 @@ function AvatarModal(props) {
                     variant="body2"
                     style={{ display: "block", color: "white", fontSize: 16 }}
                   >
-                    Migs Evangelista
+                    {sessionStorage.getItem("accountName")}
                   </Typography>
                 }
                 secondary={
@@ -69,7 +74,7 @@ function AvatarModal(props) {
                           fontSize: 12,
                         }}
                       >
-                        @migsevangelista
+                        {sessionStorage.getItem("email")}
                       </Typography>
                     </div>
                   </div>
@@ -78,7 +83,7 @@ function AvatarModal(props) {
             </ListItem>
             <div
               style={{ marginLeft: 70, cursor: "pointer" }}
-              onClick={() => navigate("/")}
+              onClick={handleLogout}
             >
               Logout
             </div>
