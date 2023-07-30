@@ -15,32 +15,9 @@ import MemberIcon from "../../../static/membersIcon.png";
 import NewMemberModal from "./NewMemberModal";
 
 const MainWorkspace = (props) => {
-  const workSpaceData = props.workSpaceData;
+  let workSpaceData = props.workSpaceData;
+  let members = props.members;
 
-  console.log("Is workSpaceData an array?", Array.isArray(workSpaceData));
-  const [members, setMembers] = useState([
-    {
-      id: 1,
-      avatarUrl: "avatar_url_1",
-      name: "Migs Evangelista",
-      email: "@migsevangelista",
-      boards: 2,
-    },
-    {
-      id: 2,
-      avatarUrl: "avatar_url_2",
-      name: "Marjoe Velasco",
-      email: "@marjoevelasco1",
-      boards: 1,
-    },
-    {
-      id: 3,
-      avatarUrl: "avatar_url_3",
-      name: "Kervin Lara",
-      email: "@kervs83",
-      boards: 1,
-    },
-  ]);
   const [memberToAdd, setMemberToAdd] = useState("");
   const [isAddMemberOpen, setIsAddMemberOpen] = useState(false);
 
@@ -52,7 +29,7 @@ const MainWorkspace = (props) => {
     setMemberToAdd(value);
   };
 
-  let numberOfPapers = 9 - props.workSpaceData.length;
+  let numberOfPapers = 9 - workSpaceData.length;
 
   return (
     <React.Fragment>
@@ -71,7 +48,7 @@ const MainWorkspace = (props) => {
         </Grid>
       </Grid>
       <Grid container spacing={2} style={{ marginTop: 10, marginBottom: 20 }}>
-        {/* {workSpaceData.map((workspace) => (
+        {workSpaceData.map((workspace) => (
           <Grid item xs={4} style={{ textAlign: "-webkit-center" }}>
             <Paper
               style={{
@@ -98,7 +75,7 @@ const MainWorkspace = (props) => {
               </div>
             </Paper>
           </Grid>
-        ))} */}
+        ))}
 
         {[...Array(numberOfPapers)].map((_, index) => (
           <Grid item key={index} xs={4} style={{ textAlign: "-webkit-center" }}>
@@ -214,7 +191,7 @@ const MainWorkspace = (props) => {
                         variant="body2"
                         color="white"
                       >
-                        on {member.boards} board
+                        on {member.boardCount} board
                       </Typography>
                     </div>
                   </div>

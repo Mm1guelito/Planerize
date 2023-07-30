@@ -31,8 +31,10 @@ const MainDashboard = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isAddWorkspaceOpen, setIsAddWorkspaceOpen] = useState(false);
   const [workSpaceData, setWorkspaceData] = useState([]);
+  const [members, setMembers] = useState([]);
   const [workspaceToAdd, setWorkspaceToAdd] = useState("");
   const [chosenWorkspace, setChosenWorkspace] = useState("");
+  const [chosenWorkspaceDetails, setChosenWorkspaceDetails] = useState([]);
   const [currentWorkspaceUI, setCurrentWorkspaceUI] = useState(false);
   const apiUrl = "http://127.0.0.1:3000";
 
@@ -57,8 +59,7 @@ const MainDashboard = () => {
   };
 
   const handleChooseWorkspace = (i) => {
-    setCurrentWorkspaceUI(true);
-    setChosenWorkspace(i);
+    handleGetChosenWorkSpaceDetails(i);
   };
 
   const handleBackToDashboard = () => {
@@ -86,8 +87,26 @@ const MainDashboard = () => {
     fetch(url, requestConfig)
       .then((response) => response.json())
       .then((messageData) => {
+        const resultObject = [];
         setWorkspaceData(messageData);
         console.log(workSpaceData);
+        messageData.forEach((item) => {
+          const { name, email } = item.member_info[0];
+          const key = `${name}_${email}`;
+
+          if (!resultObject[key]) {
+            resultObject[key] = {
+              name: name,
+              email: email,
+              boardCount: 1,
+            };
+          } else {
+            resultObject[key].boardCount++;
+          }
+        });
+
+        const resultArray = Object.values(resultObject);
+        setMembers(resultArray);
       });
   };
 
@@ -118,6 +137,30 @@ const MainDashboard = () => {
         console.error("Error:", error);
       });
   };
+
+  const handleGetChosenWorkSpaceDetails = (i) => {
+    const url = new URL(`${apiUrl}/v1/workspace/all`);
+    const params = new URLSearchParams({
+      workspace_id: i._id,
+    });
+    url.search = params;
+
+    let requestConfig = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + sessionStorage.getItem("token"),
+      },
+    };
+    fetch(url, requestConfig)
+      .then((response) => response.json())
+      .then((messageData) => {
+        console.log(messageData);
+        setChosenWorkspace(i.title);
+        setCurrentWorkspaceUI(true);
+      });
+  };
+
   return (
     <React.Fragment>
       <AddWorkspaceModal
@@ -254,7 +297,7 @@ const MainDashboard = () => {
                   xs={7}
                   style={{
                     backgroundColor:
-                      chosenWorkspace === i ? "#969696" : "transparent",
+                      chosenWorkspace === i.title ? "#969696" : "transparent",
                   }}
                 >
                   <div
@@ -265,7 +308,7 @@ const MainDashboard = () => {
                       paddingBottom: 2,
                     }}
                   >
-                    {i}
+                    {i.title}
                   </div>
                 </Grid>
                 <Grid
@@ -273,7 +316,7 @@ const MainDashboard = () => {
                   xs={4}
                   style={{
                     backgroundColor:
-                      chosenWorkspace === i ? "#969696" : "transparent",
+                      chosenWorkspace === i.title ? "#969696" : "transparent",
                   }}
                 >
                   <div style={{ float: "right", color: "white" }}>
@@ -299,6 +342,7 @@ const MainDashboard = () => {
           {currentWorkspaceUI === false ? (
             <MainWorkspace
               workSpaceData={workSpaceData}
+              members={members}
               handleChooseWorkspace={handleChooseWorkspace}
             />
           ) : (
