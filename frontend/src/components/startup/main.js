@@ -7,7 +7,6 @@ const MainStartUp = () => {
 
   const handleSwitchRegister = () => {
     setIsLogin(false);
-    console.log(isLogin);
   };
 
   return (

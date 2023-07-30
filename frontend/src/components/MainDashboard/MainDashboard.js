@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   CssBaseline,
   AppBar,
@@ -38,6 +38,11 @@ const MainDashboard = () => {
   const [workspaceToAdd, setWorkspaceToAdd] = useState("");
   const [chosenWorkspace, setChosenWorkspace] = useState("");
   const [currentWorkspaceUI, setCurrentWorkspaceUI] = useState(false);
+  const apiUrl = "http://127.0.0.1:3000";
+
+  useEffect(() => {
+    handleGetWorkspaceList();
+  }, []);
 
   const handleAvatarClick = () => {
     setIsDialogOpen(true);
@@ -52,7 +57,6 @@ const MainDashboard = () => {
   };
 
   const handleAddWorkspace = () => {
-    console.log("triggered");
     if (workspaceToAdd.trim() !== "") {
       setMockWorkspaceData((prevData) => [...prevData, workspaceToAdd]);
       setWorkspaceToAdd("");
@@ -61,7 +65,6 @@ const MainDashboard = () => {
   };
 
   const handleChangeWorkspaceValue = (value) => {
-    console.log(value);
     setWorkspaceToAdd(value);
   };
 
@@ -75,6 +78,29 @@ const MainDashboard = () => {
     setChosenWorkspace("");
   };
 
+  //===============API CALLING===========================//
+
+  const handleGetWorkspaceList = () => {
+    const url = new URL(`${apiUrl}/v1/workspace`);
+    const params = new URLSearchParams({
+      userId: sessionStorage.getItem("userId"),
+    });
+    url.search = params;
+
+    let requestConfig = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + sessionStorage.getItem("token"),
+      },
+    };
+
+    fetch(url, requestConfig)
+      .then((response) => response.json())
+      .then((messageData) => {
+        console.log(messageData);
+      });
+  };
   return (
     <React.Fragment>
       <AddWorkspaceModal

@@ -29,14 +29,44 @@ const Login = (props) => {
     },
   };
 
-  // const apiUrl = "http://127.0.0.1:3000";
+  const apiUrl = "http://127.0.0.1:3000";
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
 
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    navigate("/main-dashboard");
+    const url = `${apiUrl}/v1/auth/login`;
+
+    const payload = {
+      email: email,
+      password: pass,
+    };
+
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    };
+    fetch(url, requestOptions)
+      .then((response) => response.json())
+      .then((messageData) => {
+        if (messageData.message === "User login successful") {
+          sessionStorage.setItem("token", messageData.token);
+          const token = messageData.token;
+          const decodedToken = JSON.parse(atob(token.split(".")[1]));
+          sessionStorage.setItem("accountName", decodedToken.name);
+          sessionStorage.setItem("userId", decodedToken.userId);
+          sessionStorage.setItem("email", email);
+          navigate("/main-dashboard");
+        } else {
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   return (
