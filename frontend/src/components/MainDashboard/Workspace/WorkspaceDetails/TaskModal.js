@@ -32,6 +32,8 @@ const theme = createTheme({
 });
 
 const TaskModal = (props) => {
+  let taskDetails = props.chosenCard;
+  console.log(taskDetails);
   const [isTaskTextFieldVis, setTaskTextFieldVis] = useState(false);
   const [isActTextFieldVis, setActTextFieldVis] = useState(false);
   const [taskToAdd, setTaskToAdd] = useState("");
@@ -41,8 +43,7 @@ const TaskModal = (props) => {
   const [isTaskModalOpen, setTaskModalOpen] = useState(true);
   const [memberToAdd, setMemberToAdd] = useState("");
   const [isAddMemberOpen, setAddMemberOpen] = useState(false);
-
-  const [listOfMembers, setListOfMembers] = useState(["ME", "MV", "KL"]);
+  const listOfMembers = ["ME", "MV", "KL"];
   const [listOfTasks, setListOfTasks] = useState([
     {
       taskName: "Task - 001",
@@ -74,12 +75,13 @@ const TaskModal = (props) => {
     },
   ]);
 
+  console.log(isActTextFieldVis);
   const renderCircles = (status) => {
     const circleColors = {
-      "To do": "#CA5369",
-      "In progress": "#4977BC",
-      "In Review": "#DFBF4F",
-      Completed: "#159D72",
+      "to do": "#CA5369",
+      "in progress": "#4977BC",
+      "in review": "#DFBF4F",
+      completed: "#159D72",
     };
 
     return (
@@ -244,7 +246,7 @@ const TaskModal = (props) => {
                       <Grid item>
                         <img src={CardIcon} alt="Card Icon" />
                       </Grid>
-                      <Grid item>{props.chosenCard.name}</Grid>
+                      <Grid item>{taskDetails.title}</Grid>
                     </Grid>
                   </Grid>
                   <Grid item xs={5}>
@@ -272,7 +274,7 @@ const TaskModal = (props) => {
                         float: "right",
                         cursor: "pointer",
                       }}
-                      onClick={props.handleAddTask}
+                      onClick={props.handleCloseAddTask}
                     >
                       <div
                         style={{
@@ -346,7 +348,8 @@ const TaskModal = (props) => {
                       }}
                       multiline
                       rows={4}
-                      defaultValue="Add a more detailed description..."
+                      placeholder="Add a more detailed description..."
+                      value={taskDetails.description}
                     />
                   </div>
                   <Grid container spacing={2}>
@@ -458,7 +461,9 @@ const TaskModal = (props) => {
                   <div style={{ marginTop: 20, marginLeft: 20 }}>
                     <Grid container spacing={2}>
                       <Grid item>
-                        <Avatar style={{ fontSize: 10 }}>ME</Avatar>
+                        <Avatar style={{ fontSize: 10 }}>
+                          {sessionStorage.getItem("nameAcronym")}
+                        </Avatar>
                       </Grid>
                       <Grid item>
                         <TextField

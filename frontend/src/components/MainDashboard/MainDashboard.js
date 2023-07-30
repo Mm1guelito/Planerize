@@ -40,7 +40,7 @@ const MainDashboard = () => {
 
   useEffect(() => {
     handleGetWorkspaceList();
-  }, []);
+  });
 
   const handleAvatarClick = () => {
     setIsDialogOpen(true);
@@ -89,7 +89,6 @@ const MainDashboard = () => {
       .then((messageData) => {
         const resultObject = [];
         setWorkspaceData(messageData);
-        console.log(workSpaceData);
         messageData.forEach((item) => {
           const { name, email } = item.member_info[0];
           const key = `${name}_${email}`;
@@ -139,12 +138,9 @@ const MainDashboard = () => {
   };
 
   const handleGetChosenWorkSpaceDetails = (i) => {
-    const url = new URL(`${apiUrl}/v1/workspace/all`);
-    const params = new URLSearchParams({
-      workspace_id: i._id,
-    });
-    url.search = params;
-
+    const url = new URL(
+      `${apiUrl}/v1/workspace/all/${i._id === undefined ? i : i._id}`
+    );
     let requestConfig = {
       method: "GET",
       headers: {
@@ -155,7 +151,7 @@ const MainDashboard = () => {
     fetch(url, requestConfig)
       .then((response) => response.json())
       .then((messageData) => {
-        console.log(messageData);
+        setChosenWorkspaceDetails(messageData.data);
         setChosenWorkspace(i.title);
         setCurrentWorkspaceUI(true);
       });
@@ -198,7 +194,9 @@ const MainDashboard = () => {
           </Grid>
           <Grid item xs={6}>
             <Toolbar style={{ float: "right" }}>
-              <Avatar onClick={handleAvatarClick}>ME</Avatar>
+              <Avatar onClick={handleAvatarClick}>
+                {sessionStorage.getItem("nameAcronym")}
+              </Avatar>
             </Toolbar>
           </Grid>
         </Grid>
@@ -346,7 +344,10 @@ const MainDashboard = () => {
               handleChooseWorkspace={handleChooseWorkspace}
             />
           ) : (
-            <MainWorkspaceDetails />
+            <MainWorkspaceDetails
+              chosenWorkspaceDetails={chosenWorkspaceDetails}
+              handleGetChosenWorkSpaceDetails={handleGetChosenWorkSpaceDetails}
+            />
           )}
         </div>
       </div>

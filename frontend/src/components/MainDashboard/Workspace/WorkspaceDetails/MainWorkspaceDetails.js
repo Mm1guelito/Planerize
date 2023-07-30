@@ -3,47 +3,12 @@ import { Grid, Paper } from "@mui/material";
 import AddIcon from "../../../../static/addIcon.png";
 import TaskModal from "./TaskModal";
 
-const MainWorkspaceDetails = () => {
+const MainWorkspaceDetails = (props) => {
+  let cardList = props.chosenWorkspaceDetails;
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const [chosenCard, setChosenCard] = useState([]);
-  const statusList = ["To do", "In progress", "In Review", "Completed"];
-  const [tasks, setTasks] = useState([
-    {
-      name: "Card 1",
-      status: "To do",
-      id: 1,
-    },
-    {
-      name: "Card 2",
-      status: "In progress",
-      id: 2,
-    },
-    {
-      name: "Card 3",
-      status: "In progress",
-      id: 3,
-    },
-    {
-      name: "Card 4",
-      status: "In Review",
-      id: 4,
-    },
-    {
-      name: "Card 5",
-      status: "In Review",
-      id: 5,
-    },
-    {
-      name: "Card 6",
-      status: "Completed",
-      id: 6,
-    },
-    {
-      name: "Card 7",
-      status: "Completed",
-      id: 7,
-    },
-  ]);
+  const statusList = ["to do", "in progress", "in review", "completed"];
+  const apiUrl = "http://127.0.0.1:3000";
 
   const areStatusesEqual = (status1, status2) => {
     return (
@@ -53,10 +18,10 @@ const MainWorkspaceDetails = () => {
 
   const renderCircles = (status, taskId) => {
     const circleColors = {
-      "To do": "#CA5369",
-      "In progress": "#4977BC",
-      "In Review": "#DFBF4F",
-      Completed: "#159D72",
+      "to do": "#CA5369",
+      "in progress": "#4977BC",
+      "in review": "#DFBF4F",
+      completed: "#159D72",
     };
 
     return (
@@ -76,35 +41,90 @@ const MainWorkspaceDetails = () => {
                 : "transparent",
               cursor: "pointer",
             }}
-            onClick={(e) => handleCircleClick(e, s, taskId)}
+            onClick={(e) => handleUpdateCardStatus(e, s, taskId)}
           />
         ))}
       </div>
     );
   };
 
-  const handleCircleClick = (e, newStatus, taskId) => {
-    const updatedTasks = tasks.map((task) =>
-      task.id === taskId ? { ...task, status: newStatus } : task
-    );
-
-    setTasks(updatedTasks);
-    e.stopPropagation();
+  const handleAddTask = (task) => {
+    handleGetCardDetails(task._id);
   };
 
-  const handleAddCard = (status) => {
-    const newCard = {
-      name: `Card ${tasks.length + 1}`,
-      status: status,
-      id: tasks.length + 1,
+  const handleCloseAddTask = () => {
+    setIsAddTaskOpen(false);
+  };
+  const handleGetCardDetails = (id) => {
+    const url = new URL(`${apiUrl}/v1/card/${id}`);
+
+    let requestConfig = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + sessionStorage.getItem("token"),
+      },
+    };
+    fetch(url, requestConfig)
+      .then((response) => response.json())
+      .then((messageData) => {
+        setChosenCard(messageData.data[0]);
+        setIsAddTaskOpen(true);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  const handleAddCard = () => {
+    const url = `${apiUrl}/v1/card/${cardList[0]._id}`;
+    const payload = {
+      title: `Card ${cardList[0].card_data.length + 1}`,
+      description: "",
     };
 
-    setTasks((prevTasks) => [...prevTasks, newCard]);
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + sessionStorage.getItem("token"),
+      },
+      body: JSON.stringify(payload),
+    };
+    fetch(url, requestOptions)
+      .then((response) => response.json())
+      .then(() => {
+        props.handleGetChosenWorkSpaceDetails(cardList[0]._id);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
-  const handleAddTask = (task) => {
-    setIsAddTaskOpen(!isAddTaskOpen);
-    setChosenCard(task);
+  const handleUpdateCardStatus = (e, newStatus, taskId) => {
+    e.stopPropagation();
+    const url = `${apiUrl}/v1/card/${taskId}`;
+    const payload = {
+      status: newStatus,
+    };
+
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + sessionStorage.getItem("token"),
+      },
+      body: JSON.stringify(payload),
+    };
+
+    fetch(url, requestOptions)
+      .then((response) => response.json())
+      .then((messageData) => {
+        props.handleGetChosenWorkSpaceDetails(cardList[0]._id);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   return (
@@ -114,6 +134,7 @@ const MainWorkspaceDetails = () => {
         chosenCard={chosenCard}
         status={statusList}
         handleAddTask={handleAddTask}
+        handleCloseAddTask={handleCloseAddTask}
         renderCircles={renderCircles}
       />
       <Grid container spacing={2} style={{ marginBottom: 20 }}>
@@ -145,11 +166,11 @@ const MainWorkspaceDetails = () => {
                 >
                   {i}
                 </div>
-                {tasks
+                {cardList[0].card_data
                   .filter((task) => task.status === i)
                   .map((task) => (
                     <Paper
-                      key={task.id}
+                      key={task._id}
                       style={{
                         backgroundColor: "#4B5563",
                         color: "white",
@@ -171,7 +192,7 @@ const MainWorkspaceDetails = () => {
                               marginLeft: 15,
                             }}
                           >
-                            {task.name}
+                            {task.title}
                           </div>
                         </Grid>
                         <Grid item xs={6}>
@@ -182,7 +203,7 @@ const MainWorkspaceDetails = () => {
                               marginRight: 5,
                             }}
                           >
-                            {renderCircles(task.status, task.id)}
+                            {renderCircles(task.status, task._id)}
                           </div>
                         </Grid>
                       </Grid>
@@ -200,7 +221,7 @@ const MainWorkspaceDetails = () => {
                   <Grid
                     container
                     spacing={2}
-                    onClick={() => handleAddCard(i)}
+                    onClick={() => handleAddCard()}
                     style={{ cursor: "pointer" }}
                   >
                     <Grid item>
