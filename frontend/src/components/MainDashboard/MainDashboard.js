@@ -30,11 +30,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const MainDashboard = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isAddWorkspaceOpen, setIsAddWorkspaceOpen] = useState(false);
-  const [mockWorkspaceData, setMockWorkspaceData] = useState([
-    "Workspace-001",
-    "Workspace-002",
-    "Workspace-003",
-  ]);
+  const [workSpaceData, setWorkspaceData] = useState([]);
   const [workspaceToAdd, setWorkspaceToAdd] = useState("");
   const [chosenWorkspace, setChosenWorkspace] = useState("");
   const [currentWorkspaceUI, setCurrentWorkspaceUI] = useState(false);
@@ -54,14 +50,6 @@ const MainDashboard = () => {
 
   const handleToggleAddWorkspaceModal = () => {
     setIsAddWorkspaceOpen((prevValue) => !prevValue);
-  };
-
-  const handleAddWorkspace = () => {
-    if (workspaceToAdd.trim() !== "") {
-      setMockWorkspaceData((prevData) => [...prevData, workspaceToAdd]);
-      setWorkspaceToAdd("");
-      setIsAddWorkspaceOpen(false);
-    }
   };
 
   const handleChangeWorkspaceValue = (value) => {
@@ -98,7 +86,36 @@ const MainDashboard = () => {
     fetch(url, requestConfig)
       .then((response) => response.json())
       .then((messageData) => {
-        console.log(messageData);
+        setWorkspaceData(messageData);
+        console.log(workSpaceData);
+      });
+  };
+
+  const handleAddWorkspace = () => {
+    const url = `${apiUrl}/v1/workspace/`;
+
+    const payload = {
+      title: workspaceToAdd,
+      token: sessionStorage.getItem("userId"),
+    };
+
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + sessionStorage.getItem("token"),
+      },
+      body: JSON.stringify(payload),
+    };
+    fetch(url, requestOptions)
+      .then((response) => response.json())
+      .then(() => {
+        handleGetWorkspaceList();
+        setWorkspaceToAdd("");
+        setIsAddWorkspaceOpen(false);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
       });
   };
   return (
@@ -221,7 +238,7 @@ const MainDashboard = () => {
             margin: "5px 10px 0px 10px",
           }}
         >
-          {mockWorkspaceData.map((i) => (
+          {workSpaceData.map((i) => (
             <React.Fragment key={i}>
               <Grid
                 container
@@ -281,7 +298,7 @@ const MainDashboard = () => {
         <div>
           {currentWorkspaceUI === false ? (
             <MainWorkspace
-              mockWorkspaceData={mockWorkspaceData}
+              workSpaceData={workSpaceData}
               handleChooseWorkspace={handleChooseWorkspace}
             />
           ) : (

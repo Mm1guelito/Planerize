@@ -15,6 +15,9 @@ import MemberIcon from "../../../static/membersIcon.png";
 import NewMemberModal from "./NewMemberModal";
 
 const MainWorkspace = (props) => {
+  const workSpaceData = props.workSpaceData;
+
+  console.log("Is workSpaceData an array?", Array.isArray(workSpaceData));
   const [members, setMembers] = useState([
     {
       id: 1,
@@ -49,7 +52,7 @@ const MainWorkspace = (props) => {
     setMemberToAdd(value);
   };
 
-  let numberOfPapers = 9 - props.mockWorkspaceData.length;
+  let numberOfPapers = 9 - props.workSpaceData.length;
 
   return (
     <React.Fragment>
@@ -68,36 +71,35 @@ const MainWorkspace = (props) => {
         </Grid>
       </Grid>
       <Grid container spacing={2} style={{ marginTop: 10, marginBottom: 20 }}>
-        {props.mockWorkspaceData.map((i) => {
-          return (
-            <Grid item xs={4} style={{ textAlign: "-webkit-center" }}>
-              <Paper
+        {/* {workSpaceData.map((workspace) => (
+          <Grid item xs={4} style={{ textAlign: "-webkit-center" }}>
+            <Paper
+              style={{
+                backgroundColor: "#202324",
+                color: "white",
+                width: 300,
+                height: 100,
+                position: "relative",
+                borderRadius: 15,
+                cursor: "pointer",
+              }}
+              onClick={() => props.handleChooseWorkspace(workspace)}
+            >
+              <div
                 style={{
-                  backgroundColor: "#202324",
+                  position: "absolute",
+                  top: 15,
+                  left: 15,
                   color: "white",
-                  width: 300,
-                  height: 100,
-                  position: "relative",
-                  borderRadius: 15,
-                  cursor: "pointer",
+                  fontWeight: "bold",
                 }}
-                onClick={() => props.handleChooseWorkspace(i)}
               >
-                <div
-                  style={{
-                    position: "absolute",
-                    top: 15,
-                    left: 15,
-                    color: "white",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {i}
-                </div>
-              </Paper>
-            </Grid>
-          );
-        })}
+                {workspace.title}
+              </div>
+            </Paper>
+          </Grid>
+        ))} */}
+
         {[...Array(numberOfPapers)].map((_, index) => (
           <Grid item key={index} xs={4} style={{ textAlign: "-webkit-center" }}>
             <Paper
