@@ -10,8 +10,9 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-const AvatarModal = (props) => {
+function AvatarModal(props) {
   const navigate = useNavigate();
+
   return (
     <React.Fragment>
       <Dialog
@@ -86,6 +87,6 @@ const AvatarModal = (props) => {
       </Dialog>
     </React.Fragment>
   );
-};
+}
 
 export default AvatarModal;
