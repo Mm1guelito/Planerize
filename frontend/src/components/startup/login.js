@@ -29,6 +29,7 @@ const Login = (props) => {
     },
   };
 
+  const apiUrl = "http://127.0.0.1:3000";
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
 
