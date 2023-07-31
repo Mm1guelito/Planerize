@@ -20,8 +20,7 @@ import MainWorkspace from "./Workspace/MainWorkspace";
 
 import "./MainDashboard.css";
 import MainWorkspaceDetails from "./Workspace/WorkspaceDetails/MainWorkspaceDetails";
-import SnackBarErrorHandling from "../../../snackBarErrorHandling";
-
+import SnackBarErrorHandling from "../snackBarErrorHandling";
 const drawerWidth = 270;
 
 const Transition = React.forwardRef(function Transition(props, ref) {

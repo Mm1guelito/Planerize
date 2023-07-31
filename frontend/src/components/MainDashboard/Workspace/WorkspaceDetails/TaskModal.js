@@ -213,19 +213,13 @@ const TaskModal = (props) => {
     setDeleteActOpen(false);
     setItemToDelete(null);
   };
+  const checkedTasksCount = taskDetails.task_data.reduce(
+    (count, taskArray) => count + (taskArray[0].checked ? 1 : 0),
+    0
+  );
 
-  const getProgressPercentage = () => {
-    const totalTasks = listOfTasks.length;
-    const completedTasks = listOfTasks.filter(
-      (task) => task.status === "Done" || task.status === "Completed"
-    ).length;
-
-    if (totalTasks === 0) {
-      return 0;
-    }
-
-    return Math.round((completedTasks / totalTasks) * 100);
-  };
+  // Calculate the average progress (percentage)
+  const averageProgress = (checkedTasksCount / listOfTasks.length) * 100;
 
   const handleToggleAddMemberModal = () => {
     setAddMemberOpen(!isAddMemberOpen);
@@ -452,14 +446,14 @@ const TaskModal = (props) => {
                   <div
                     style={{ marginLeft: 20, marginTop: 15, marginBottom: 20 }}
                   >
-                    <Typography variant="body2" color="white">{`${Math.round(
-                      getProgressPercentage()
-                    )}%`}</Typography>
+                    <Typography variant="body2" color="white">
+                      {averageProgress.toFixed(0)}%
+                    </Typography>
                     <LinearProgress
                       variant="determinate"
-                      value={getProgressPercentage()}
+                      value={averageProgress.toFixed(2)}
                       color={
-                        getProgressPercentage() > 50
+                        averageProgress.toFixed(2) > 50
                           ? "customColorMore"
                           : "customColorLess"
                       }
@@ -483,7 +477,7 @@ const TaskModal = (props) => {
                                       borderRadius: "50%",
                                       boxSizing: "border-box",
                                       backgroundColor:
-                                        task.status === "Done"
+                                        task.checked === true
                                           ? "#159D72"
                                           : "#CA5369",
                                     }}
