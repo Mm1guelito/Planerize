@@ -17,7 +17,6 @@ function AvatarModal(props) {
     sessionStorage.clear();
     navigate("/");
   };
-
   return (
     <React.Fragment>
       <Dialog
@@ -43,7 +42,9 @@ function AvatarModal(props) {
             <div>Account</div>
             <ListItem alignItems="flex-start">
               <ListItemAvatar>
-                <Avatar alt="Avatar">ME</Avatar>
+                <Avatar alt="Avatar">
+                  {sessionStorage.getItem("nameAcronym")}
+                </Avatar>
               </ListItemAvatar>
               <ListItemText
                 primary={

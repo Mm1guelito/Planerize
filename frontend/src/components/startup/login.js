@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Button, TextField } from "@mui/material";
 import PlanerizeIcon from "../../static/PlanerizeIcon.png";
 import { useNavigate } from "react-router-dom";
+import SnackBarErrorHandling from "../snackBarErrorHandling";
 
 const styles = {
   container: {
@@ -32,6 +33,25 @@ const Login = (props) => {
   const apiUrl = "http://127.0.0.1:3000";
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [severity, setSeverity] = useState("");
+  const snackbarRef = useRef(null);
+
+  const handleShowSnackbar = (message, severity) => {
+    setOpen(true);
+    setMessage(message);
+    setSeverity(severity);
+    setTimeout(() => {
+      handleCloseSnackbar();
+    }, 3000);
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpen(false);
+    setMessage("");
+    setSeverity("");
+  };
 
   const navigate = useNavigate();
 
@@ -60,17 +80,39 @@ const Login = (props) => {
           sessionStorage.setItem("accountName", decodedToken.name);
           sessionStorage.setItem("userId", decodedToken.userId);
           sessionStorage.setItem("email", email);
+          sessionStorage.setItem(
+            "nameAcronym",
+            decodedToken.name
+              .split(" ")
+              .map((word) => word.charAt(0))
+              .join("")
+          );
           navigate("/main-dashboard");
         } else {
+          handleShowSnackbar(
+            "Login failed. Please check your credentials.",
+            "error"
+          );
         }
       })
       .catch((error) => {
+        handleShowSnackbar(
+          "An error occurred while processing your request.",
+          "error"
+        );
         console.error("Error:", error);
       });
   };
 
   return (
     <div style={styles.container}>
+      <SnackBarErrorHandling
+        handleCloseSnackbar={handleCloseSnackbar}
+        open={open}
+        message={message}
+        snackbarRef={snackbarRef}
+        severity={severity}
+      />
       <div style={styles.centered}>
         <img src={PlanerizeIcon} alt="Planerize Icon" />
       </div>
