@@ -68,6 +68,34 @@ const MainWorkspaceDetails = (props) => {
     );
   };
 
+  const taskChangeRefresh = () => {
+    console.log("triggered");
+    const url = new URL(`${apiUrl}/v1/card/${chosenCard._id}`);
+
+    let requestConfig = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + sessionStorage.getItem("token"),
+      },
+    };
+    fetch(url, requestConfig)
+      .then((response) => response.json())
+      .then((messageData) => {
+        console.log("data from backend", messageData);
+        console.log("URL", url);
+        console.log("card dets", messageData.data[0]);
+        setChosenCard(messageData.data[0]);
+        setIsAddTaskOpen(true);
+      })
+      .catch((error) => {
+        handleShowSnackbar(
+          "An error occurred while processing your request.",
+          "error"
+        );
+        console.error("Error:", error);
+      });
+  };
   const handleViewTask = (task) => {
     console.log("task", task);
     handleGetCardDetails(task._id);
@@ -174,6 +202,7 @@ const MainWorkspaceDetails = (props) => {
           chosenCard={chosenCard}
           status={statusList}
           handleViewTask={handleViewTask}
+          taskChangeRefresh={taskChangeRefresh}
           handleCloseAddTask={handleCloseAddTask}
           renderCircles={renderCircles}
         />

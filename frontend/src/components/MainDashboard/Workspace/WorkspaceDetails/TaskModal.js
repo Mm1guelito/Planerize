@@ -259,7 +259,9 @@ const TaskModal = (props) => {
 
     fetch(url, requestOptions)
       .then((response) => response.json())
-      .then(() => {})
+      .then(() => {
+        props.taskChangeRefresh();
+      })
       .catch((error) => {
         handleShowSnackbar(
           "An error occurred while processing your request.",
@@ -286,7 +288,9 @@ const TaskModal = (props) => {
 
     fetch(url, requestOptions)
       .then((response) => response.json())
-      .then(() => {})
+      .then(() => {
+        props.taskChangeRefresh();
+      })
       .catch((error) => {
         handleShowSnackbar(
           "An error occurred while processing your request.",
@@ -310,6 +314,7 @@ const TaskModal = (props) => {
     fetch(url, requestOptions)
       .then((response) => response.json())
       .then(() => {
+        props.taskChangeRefresh();
         setTaskModalOpen(true);
         setDeleteActOpen(false);
         setItemToDelete(null);
