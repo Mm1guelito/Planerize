@@ -49,6 +49,7 @@ const MainWorkspaceDetails = (props) => {
   };
 
   const handleAddTask = (task) => {
+    console.log("task", task);
     handleGetCardDetails(task._id);
   };
 
@@ -56,6 +57,7 @@ const MainWorkspaceDetails = (props) => {
     setIsAddTaskOpen(false);
   };
   const handleGetCardDetails = (id) => {
+    console.log("triggered");
     const url = new URL(`${apiUrl}/v1/card/${id}`);
 
     let requestConfig = {
@@ -68,6 +70,7 @@ const MainWorkspaceDetails = (props) => {
     fetch(url, requestConfig)
       .then((response) => response.json())
       .then((messageData) => {
+        console.log("card dets", messageData.data[0]);
         setChosenCard(messageData.data[0]);
         setIsAddTaskOpen(true);
       })
@@ -129,14 +132,19 @@ const MainWorkspaceDetails = (props) => {
 
   return (
     <>
-      <TaskModal
-        isAddTaskOpen={isAddTaskOpen}
-        chosenCard={chosenCard}
-        status={statusList}
-        handleAddTask={handleAddTask}
-        handleCloseAddTask={handleCloseAddTask}
-        renderCircles={renderCircles}
-      />
+      {chosenCard.length === 0 ? (
+        ""
+      ) : (
+        <TaskModal
+          isAddTaskOpen={isAddTaskOpen}
+          chosenCard={chosenCard}
+          status={statusList}
+          handleAddTask={handleAddTask}
+          handleCloseAddTask={handleCloseAddTask}
+          renderCircles={renderCircles}
+        />
+      )}
+
       <Grid container spacing={2} style={{ marginBottom: 20 }}>
         {statusList.map((i) => {
           return (

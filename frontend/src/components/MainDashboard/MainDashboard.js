@@ -40,7 +40,7 @@ const MainDashboard = () => {
 
   useEffect(() => {
     handleGetWorkspaceList();
-  });
+  }, []);
 
   const handleAvatarClick = () => {
     setIsDialogOpen(true);

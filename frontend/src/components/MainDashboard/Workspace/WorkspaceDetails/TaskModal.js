@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
   Dialog,
@@ -19,6 +19,7 @@ import AddIcon from "../../../../static/addIcon.png";
 import DescIcon from "../../../../static/descIicon.png";
 import DeleteActModal from "./DeleteActModal";
 import NewTaskMemberModal from "./NewTaskMemberModal";
+import SnackBarErrorHandling from "../../../snackBarErrorHandling";
 
 const theme = createTheme({
   palette: {
@@ -32,10 +33,9 @@ const theme = createTheme({
 });
 
 const TaskModal = (props) => {
-  let taskDetails = props.chosenCard;
-  console.log(taskDetails);
+  const taskDetails = props.chosenCard;
+  console.log(props);
   const [isTaskTextFieldVis, setTaskTextFieldVis] = useState(false);
-  const [isActTextFieldVis, setActTextFieldVis] = useState(false);
   const [taskToAdd, setTaskToAdd] = useState("");
   const [activityToAdd, setActivityToAdd] = useState("");
   const [isDeleteActOpen, setDeleteActOpen] = useState(false);
@@ -43,7 +43,7 @@ const TaskModal = (props) => {
   const [isTaskModalOpen, setTaskModalOpen] = useState(true);
   const [memberToAdd, setMemberToAdd] = useState("");
   const [isAddMemberOpen, setAddMemberOpen] = useState(false);
-  const listOfMembers = ["ME", "MV", "KL"];
+  const listOfMembers = [];
   const [listOfTasks, setListOfTasks] = useState([
     {
       taskName: "Task - 001",
@@ -74,8 +74,27 @@ const TaskModal = (props) => {
       editor: "Migs Evangelista",
     },
   ]);
+  const apiUrl = "http://127.0.0.1:3000";
 
-  console.log(isActTextFieldVis);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [severity, setSeverity] = useState("");
+  const snackbarRef = useRef(null);
+
+  const handleShowSnackbar = (message, severity) => {
+    setOpen(true);
+    setMessage(message);
+    setSeverity(severity);
+    setTimeout(() => {
+      handleCloseSnackbar();
+    }, 3000);
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpen(false);
+    setMessage("");
+    setSeverity("");
+  };
   const renderCircles = (status) => {
     const circleColors = {
       "to do": "#CA5369",
@@ -126,6 +145,16 @@ const TaskModal = (props) => {
     });
   };
 
+  const formatDate = (dateString) => {
+    const dateObj = new Date(dateString);
+    const options = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+    return dateObj.toLocaleDateString(undefined, options);
+  };
+
   const handleAddOrAddTask = (text) => {
     if (text === "Add Task" || text === "Cancel") {
       setTaskTextFieldVis(!isTaskTextFieldVis);
@@ -140,7 +169,7 @@ const TaskModal = (props) => {
         id: listOfTasks.length + 1,
         status: "inProgress",
       };
-
+      handleAddTask();
       setListOfTasks((prevState) => [...prevState, task]);
       setTaskToAdd("");
       setTaskTextFieldVis(false);
@@ -149,9 +178,9 @@ const TaskModal = (props) => {
 
   const handleSaveCancelAct = (text) => {
     if (text === "Cancel") {
-      setActTextFieldVis(false);
       setActivityToAdd("");
     } else {
+      handleAddActivity();
       const currentDate = new Date();
       const options = { year: "numeric", month: "long", day: "numeric" };
       const formattedDate = currentDate.toLocaleString(undefined, options);
@@ -164,7 +193,6 @@ const TaskModal = (props) => {
       };
 
       setListOfActs((prevState) => [...prevState, act]);
-      setActTextFieldVis(false);
       setActivityToAdd("");
     }
   };
@@ -208,9 +236,72 @@ const TaskModal = (props) => {
     setMemberToAdd(value);
   };
 
+  //============API CALLING==============//
+
+  const handleAddTask = () => {
+    const url = `${apiUrl}/v1/task/${taskDetails._id}`;
+
+    const payload = {
+      title: taskToAdd,
+    };
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + sessionStorage.getItem("token"),
+      },
+      body: JSON.stringify(payload),
+    };
+
+    fetch(url, requestOptions)
+      .then((response) => response.json())
+      .then(() => {})
+      .catch((error) => {
+        handleShowSnackbar(
+          "An error occurred while processing your request.",
+          "error"
+        );
+        console.error("Error:", error);
+      });
+  };
+
+  const handleAddActivity = () => {
+    const url = `${apiUrl}/v1/activity/${taskDetails._id}`;
+
+    const payload = {
+      content: activityToAdd,
+    };
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + sessionStorage.getItem("token"),
+      },
+      body: JSON.stringify(payload),
+    };
+
+    fetch(url, requestOptions)
+      .then((response) => response.json())
+      .then(() => {})
+      .catch((error) => {
+        handleShowSnackbar(
+          "An error occurred while processing your request.",
+          "error"
+        );
+        console.error("Error:", error);
+      });
+  };
+
   return (
     <React.Fragment>
       <ThemeProvider theme={theme}>
+        <SnackBarErrorHandling
+          handleCloseSnackbar={handleCloseSnackbar}
+          open={open}
+          message={message}
+          snackbarRef={snackbarRef}
+          severity={severity}
+        />
         <NewTaskMemberModal
           buttonText={"Add"}
           memberToAdd={memberToAdd}
@@ -375,37 +466,41 @@ const TaskModal = (props) => {
                       style={{ marginBottom: 10, width: 450 }}
                     />
                     <div>
-                      {listOfTasks.map((i) => (
-                        <Grid container spacing={0}>
-                          <Grid item xs={6}>
-                            <Grid container spacing={2}>
-                              <Grid item>
-                                <div
-                                  key={i}
-                                  style={{
-                                    width: 15,
-                                    height: 15,
-                                    marginRight: 5,
-                                    borderRadius: "50%",
-                                    boxSizing: "border-box",
-                                    backgroundColor:
-                                      i.status === "Done"
-                                        ? "#159D72"
-                                        : "#CA5369",
-                                  }}
-                                  onClick={() => handleStatusChange(i.id)}
-                                />
-                              </Grid>
-                              <Grid item>
-                                <div>{i.taskName}</div>
+                      {taskDetails.task_data.map((taskArray) => {
+                        // Since each taskArray contains only one task object, we can access it with taskArray[0]
+                        const task = taskArray[0];
+
+                        return (
+                          <Grid key={task._id} container spacing={0}>
+                            <Grid item xs={6}>
+                              <Grid container spacing={2}>
+                                <Grid item>
+                                  <div
+                                    style={{
+                                      width: 15,
+                                      height: 15,
+                                      marginRight: 5,
+                                      borderRadius: "50%",
+                                      boxSizing: "border-box",
+                                      backgroundColor:
+                                        task.status === "Done"
+                                          ? "#159D72"
+                                          : "#CA5369",
+                                    }}
+                                    onClick={() => handleStatusChange(task._id)} // Assuming the ID is stored in _id property
+                                  />
+                                </Grid>
+                                <Grid item>
+                                  <div>{task.title}</div>
+                                </Grid>
                               </Grid>
                             </Grid>
+                            <Grid item xs={6}>
+                              <div>Updated last {task.date}</div>
+                            </Grid>
                           </Grid>
-                          <Grid item xs={6}>
-                            <div>Updated last {i.date}</div>
-                          </Grid>
-                        </Grid>
-                      ))}
+                        );
+                      })}
                     </div>
                     <TextField
                       value={taskToAdd}
@@ -509,8 +604,8 @@ const TaskModal = (props) => {
                     >
                       Cancel
                     </Button>
-                    {listOfActs.map((i) => (
-                      <React.Fragment key={i.id}>
+                    {taskDetails.activity_data.map((i) => (
+                      <React.Fragment key={i._id}>
                         <div style={{ marginTop: 30 }}>
                           <Grid container spacing={0}>
                             <Grid item xs={6}>
@@ -522,19 +617,22 @@ const TaskModal = (props) => {
                                       fontSize: 10,
                                     }}
                                   >
-                                    ME
+                                    {i.commenter_data[0].name
+                                      .split(" ")
+                                      .map((word) => word.charAt(0))
+                                      .join("")}
                                   </Avatar>
                                 </Grid>
                                 <Grid item>
                                   <div style={{ paddingTop: 8 }}>
-                                    {i.editor}
+                                    {i.commenter_data[0].name}
                                   </div>
                                 </Grid>
                               </Grid>
                             </Grid>
                             <Grid item xs={6}>
                               <div style={{ paddingTop: 8, float: "right" }}>
-                                {i.date}
+                                {formatDate(i.updatedAt)}
                               </div>
                             </Grid>
                           </Grid>
@@ -548,7 +646,7 @@ const TaskModal = (props) => {
                               borderRadius: 20,
                             }}
                           >
-                            {i.actDets}
+                            {i.content}
                           </Paper>
                           <div
                             style={{
