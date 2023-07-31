@@ -90,6 +90,8 @@ const MainWorkspaceDetails = (props) => {
     fetch(url, requestConfig)
       .then((response) => response.json())
       .then((messageData) => {
+        console.log("data from backend", messageData);
+        console.log("URL", url);
         console.log("card dets", messageData.data[0]);
         setChosenCard(messageData.data[0]);
         setIsAddTaskOpen(true);

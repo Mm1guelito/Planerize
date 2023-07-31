@@ -203,16 +203,16 @@ const TaskModal = (props) => {
     setTaskModalOpen(false);
   };
 
-  const handleDelete = () => {
-    if (itemToDelete) {
-      setListOfActs((prevState) =>
-        prevState.filter((act) => act.id !== itemToDelete.id)
-      );
-      setTaskModalOpen(true);
-    }
-    setDeleteActOpen(false);
-    setItemToDelete(null);
-  };
+  // const handleDelete = () => {
+  //   if (itemToDelete) {
+  //     setListOfActs((prevState) =>
+  //       prevState.filter((act) => act.id !== itemToDelete.id)
+  //     );
+  //     setTaskModalOpen(true);
+  //   }
+  //   setDeleteActOpen(false);
+  //   setItemToDelete(null);
+  // };
   const checkedTasksCount = taskDetails.task_data.reduce(
     (count, taskArray) => count + (taskArray[0].checked ? 1 : 0),
     0
@@ -277,6 +277,33 @@ const TaskModal = (props) => {
     fetch(url, requestOptions)
       .then((response) => response.json())
       .then(() => {})
+      .catch((error) => {
+        handleShowSnackbar(
+          "An error occurred while processing your request.",
+          "error"
+        );
+        console.error("Error:", error);
+      });
+  };
+
+  const handleDelete = (id) => {
+    const url = `${apiUrl}/v1/activity/${taskDetails._id}/${id}`;
+
+    const requestOptions = {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + sessionStorage.getItem("token"),
+      },
+    };
+
+    fetch(url, requestOptions)
+      .then((response) => response.json())
+      .then(() => {
+        setTaskModalOpen(true);
+        setDeleteActOpen(false);
+        setItemToDelete(null);
+      })
       .catch((error) => {
         handleShowSnackbar(
           "An error occurred while processing your request.",
@@ -652,7 +679,7 @@ const TaskModal = (props) => {
                               cursor: "pointer",
                               marginRight: 10,
                             }}
-                            onClick={() => handleToggleDeleteActModal(i)}
+                            onClick={() => handleToggleDeleteActModal(i._id)}
                           >
                             Delete
                           </div>

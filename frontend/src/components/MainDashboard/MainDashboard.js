@@ -108,31 +108,30 @@ const MainDashboard = () => {
       .then((messageData) => {
         const resultObject = [];
         setWorkspaceData(messageData);
-        messageData
-          .forEach((item) => {
-            const { name, email } = item.member_info[0];
-            const key = `${name}_${email}`;
+        messageData.forEach((item) => {
+          const { name, email } = item.member_info[0];
+          const key = `${name}_${email}`;
 
-            if (!resultObject[key]) {
-              resultObject[key] = {
-                name: name,
-                email: email,
-                boardCount: 1,
-              };
-            } else {
-              resultObject[key].boardCount++;
-            }
-          })
-          .catch((error) => {
-            handleShowSnackbar(
-              "An error occurred while processing your request.",
-              "error"
-            );
-            console.error("Error:", error);
-          });
+          if (!resultObject[key]) {
+            resultObject[key] = {
+              name: name,
+              email: email,
+              boardCount: 1,
+            };
+          } else {
+            resultObject[key].boardCount++;
+          }
+        });
 
         const resultArray = Object.values(resultObject);
         setMembers(resultArray);
+      })
+      .catch((error) => {
+        handleShowSnackbar(
+          "An error occurred while processing your request.",
+          "error"
+        );
+        console.error("Error:", error);
       });
   };
 
