@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Grid, Paper } from "@mui/material";
 import AddIcon from "../../../../static/addIcon.png";
 import TaskModal from "./TaskModal";
+import SnackBarErrorHandling from "../../../snackBarErrorHandling";
 
 const MainWorkspaceDetails = (props) => {
   let cardList = props.chosenWorkspaceDetails;
@@ -9,6 +10,25 @@ const MainWorkspaceDetails = (props) => {
   const [chosenCard, setChosenCard] = useState([]);
   const statusList = ["to do", "in progress", "in review", "completed"];
   const apiUrl = "http://127.0.0.1:3000";
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [severity, setSeverity] = useState("");
+  const snackbarRef = useRef(null);
+
+  const handleShowSnackbar = (message, severity) => {
+    setOpen(true);
+    setMessage(message);
+    setSeverity(severity);
+    setTimeout(() => {
+      handleCloseSnackbar();
+    }, 3000);
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpen(false);
+    setMessage("");
+    setSeverity("");
+  };
 
   const areStatusesEqual = (status1, status2) => {
     return (
@@ -75,6 +95,10 @@ const MainWorkspaceDetails = (props) => {
         setIsAddTaskOpen(true);
       })
       .catch((error) => {
+        handleShowSnackbar(
+          "An error occurred while processing your request.",
+          "error"
+        );
         console.error("Error:", error);
       });
   };
@@ -100,6 +124,10 @@ const MainWorkspaceDetails = (props) => {
         props.handleGetChosenWorkSpaceDetails(cardList[0]._id);
       })
       .catch((error) => {
+        handleShowSnackbar(
+          "An error occurred while processing your request.",
+          "error"
+        );
         console.error("Error:", error);
       });
   };
@@ -126,6 +154,10 @@ const MainWorkspaceDetails = (props) => {
         props.handleGetChosenWorkSpaceDetails(cardList[0]._id);
       })
       .catch((error) => {
+        handleShowSnackbar(
+          "An error occurred while processing your request.",
+          "error"
+        );
         console.error("Error:", error);
       });
   };
@@ -144,7 +176,13 @@ const MainWorkspaceDetails = (props) => {
           renderCircles={renderCircles}
         />
       )}
-
+      <SnackBarErrorHandling
+        handleCloseSnackbar={handleCloseSnackbar}
+        open={open}
+        message={message}
+        snackbarRef={snackbarRef}
+        severity={severity}
+      />
       <Grid container spacing={2} style={{ marginBottom: 20 }}>
         {statusList.map((i) => {
           return (

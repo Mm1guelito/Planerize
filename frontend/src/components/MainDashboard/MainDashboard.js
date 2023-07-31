@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   CssBaseline,
   AppBar,
@@ -20,6 +20,7 @@ import MainWorkspace from "./Workspace/MainWorkspace";
 
 import "./MainDashboard.css";
 import MainWorkspaceDetails from "./Workspace/WorkspaceDetails/MainWorkspaceDetails";
+import SnackBarErrorHandling from "../../../snackBarErrorHandling";
 
 const drawerWidth = 270;
 
@@ -37,6 +38,25 @@ const MainDashboard = () => {
   const [chosenWorkspaceDetails, setChosenWorkspaceDetails] = useState([]);
   const [currentWorkspaceUI, setCurrentWorkspaceUI] = useState(false);
   const apiUrl = "http://127.0.0.1:3000";
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [severity, setSeverity] = useState("");
+  const snackbarRef = useRef(null);
+
+  const handleShowSnackbar = (message, severity) => {
+    setOpen(true);
+    setMessage(message);
+    setSeverity(severity);
+    setTimeout(() => {
+      handleCloseSnackbar();
+    }, 3000);
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpen(false);
+    setMessage("");
+    setSeverity("");
+  };
 
   useEffect(() => {
     handleGetWorkspaceList();
@@ -89,20 +109,28 @@ const MainDashboard = () => {
       .then((messageData) => {
         const resultObject = [];
         setWorkspaceData(messageData);
-        messageData.forEach((item) => {
-          const { name, email } = item.member_info[0];
-          const key = `${name}_${email}`;
+        messageData
+          .forEach((item) => {
+            const { name, email } = item.member_info[0];
+            const key = `${name}_${email}`;
 
-          if (!resultObject[key]) {
-            resultObject[key] = {
-              name: name,
-              email: email,
-              boardCount: 1,
-            };
-          } else {
-            resultObject[key].boardCount++;
-          }
-        });
+            if (!resultObject[key]) {
+              resultObject[key] = {
+                name: name,
+                email: email,
+                boardCount: 1,
+              };
+            } else {
+              resultObject[key].boardCount++;
+            }
+          })
+          .catch((error) => {
+            handleShowSnackbar(
+              "An error occurred while processing your request.",
+              "error"
+            );
+            console.error("Error:", error);
+          });
 
         const resultArray = Object.values(resultObject);
         setMembers(resultArray);
@@ -133,6 +161,10 @@ const MainDashboard = () => {
         setIsAddWorkspaceOpen(false);
       })
       .catch((error) => {
+        handleShowSnackbar(
+          "An error occurred while processing your request.",
+          "error"
+        );
         console.error("Error:", error);
       });
   };
@@ -154,11 +186,25 @@ const MainDashboard = () => {
         setChosenWorkspaceDetails(messageData.data);
         setChosenWorkspace(i.title);
         setCurrentWorkspaceUI(true);
+      })
+      .catch((error) => {
+        handleShowSnackbar(
+          "An error occurred while processing your request.",
+          "error"
+        );
+        console.error("Error:", error);
       });
   };
 
   return (
     <React.Fragment>
+      <SnackBarErrorHandling
+        handleCloseSnackbar={handleCloseSnackbar}
+        open={open}
+        message={message}
+        snackbarRef={snackbarRef}
+        severity={severity}
+      />
       <AddWorkspaceModal
         workspaceToAdd={workspaceToAdd}
         isAddWorkspaceOpen={isAddWorkspaceOpen}
