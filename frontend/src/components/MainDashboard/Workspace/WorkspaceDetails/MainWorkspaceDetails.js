@@ -68,7 +68,7 @@ const MainWorkspaceDetails = (props) => {
     );
   };
 
-  const handleAddTask = (task) => {
+  const handleViewTask = (task) => {
     console.log("task", task);
     handleGetCardDetails(task._id);
   };
@@ -173,7 +173,7 @@ const MainWorkspaceDetails = (props) => {
           isAddTaskOpen={isAddTaskOpen}
           chosenCard={chosenCard}
           status={statusList}
-          handleAddTask={handleAddTask}
+          handleViewTask={handleViewTask}
           handleCloseAddTask={handleCloseAddTask}
           renderCircles={renderCircles}
         />
@@ -228,7 +228,7 @@ const MainWorkspaceDetails = (props) => {
                         paddingTop: 10,
                         marginTop: 30,
                       }}
-                      onClick={() => handleAddTask(task)}
+                      onClick={() => handleViewTask(task)}
                     >
                       <Grid container spacing={0}>
                         <Grid item xs={6}>

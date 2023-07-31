@@ -34,7 +34,7 @@ const theme = createTheme({
 
 const TaskModal = (props) => {
   const taskDetails = props.chosenCard;
-  console.log(props);
+  console.log("props", props);
   const [isTaskTextFieldVis, setTaskTextFieldVis] = useState(false);
   const [taskToAdd, setTaskToAdd] = useState("");
   const [activityToAdd, setActivityToAdd] = useState("");
@@ -43,6 +43,7 @@ const TaskModal = (props) => {
   const [isTaskModalOpen, setTaskModalOpen] = useState(true);
   const [memberToAdd, setMemberToAdd] = useState("");
   const [isAddMemberOpen, setAddMemberOpen] = useState(false);
+  const [averageProgress, setAverageProgress] = useState(0);
   const listOfMembers = [];
   const [listOfTasks, setListOfTasks] = useState([
     {
@@ -213,13 +214,22 @@ const TaskModal = (props) => {
   //   setDeleteActOpen(false);
   //   setItemToDelete(null);
   // };
-  const checkedTasksCount = taskDetails.task_data.reduce(
-    (count, taskArray) => count + (taskArray[0].checked ? 1 : 0),
-    0
-  );
+  // const checkedTasksCount = taskDetails.task_data;
+  // if (checkedTasksCount !== undefined) {
+  //   // If checkedTasksCount is an array, it will proceed with the calculations,
+  //   // otherwise, it will not enter this block and averageProgress will be undefined.
+  //   const completedTasksCount = checkedTasksCount.reduce(
+  //     (count, taskArray) => count + (taskArray[0].checked ? 1 : 0),
+  //     0
+  //   );
+  //   console.log("completedTasksCount", completedTasksCount);
 
-  // Calculate the average progress (percentage)
-  const averageProgress = (checkedTasksCount / listOfTasks.length) * 100;
+  //   setAverageProgress((completedTasksCount / listOfTasks.length) * 100);
+  //   console.log("Average Progress:", averageProgress);
+  // } else {
+  //   // Handle the case when checkedTasksCount is undefined
+  //   console.log("No task data found!");
+  // }
 
   const handleToggleAddMemberModal = () => {
     setAddMemberOpen(!isAddMemberOpen);
@@ -358,7 +368,11 @@ const TaskModal = (props) => {
                       <Grid item>
                         <img src={CardIcon} alt="Card Icon" />
                       </Grid>
-                      <Grid item>{taskDetails.title}</Grid>
+                      <Grid item>
+                        {taskDetails.title === undefined
+                          ? ""
+                          : taskDetails.title}
+                      </Grid>
                     </Grid>
                   </Grid>
                   <Grid item xs={5}>
@@ -474,53 +488,62 @@ const TaskModal = (props) => {
                     style={{ marginLeft: 20, marginTop: 15, marginBottom: 20 }}
                   >
                     <Typography variant="body2" color="white">
-                      {averageProgress.toFixed(0)}%
+                      0%
                     </Typography>
                     <LinearProgress
                       variant="determinate"
-                      value={averageProgress.toFixed(2)}
+                      value={0}
                       color={
-                        averageProgress.toFixed(2) > 50
-                          ? "customColorMore"
-                          : "customColorLess"
+                        "customColorLess"
+                        // averageProgress.toFixed(2) > 50
+                        //   ? "customColorMore"
+                        //   : "customColorLess"
                       }
                       style={{ marginBottom: 10, width: 450 }}
                     />
                     <div>
                       {taskDetails.task_data.map((taskArray) => {
                         // Since each taskArray contains only one task object, we can access it with taskArray[0]
-                        const task = taskArray[0];
 
-                        return (
-                          <Grid key={task._id} container spacing={0}>
-                            <Grid item xs={6}>
-                              <Grid container spacing={2}>
-                                <Grid item>
-                                  <div
-                                    style={{
-                                      width: 15,
-                                      height: 15,
-                                      marginRight: 5,
-                                      borderRadius: "50%",
-                                      boxSizing: "border-box",
-                                      backgroundColor:
-                                        task.checked === true
-                                          ? "#159D72"
-                                          : "#CA5369",
-                                    }}
-                                    onClick={() => handleStatusChange(task._id)} // Assuming the ID is stored in _id property
-                                  />
-                                </Grid>
-                                <Grid item>
-                                  <div>{task.title}</div>
+                        const task = taskArray[0];
+                        if (task !== undefined) {
+                          return (
+                            <Grid key={task._id} container spacing={0}>
+                              <Grid item xs={6}>
+                                <Grid container spacing={2}>
+                                  <Grid item>
+                                    <div
+                                      style={{
+                                        width: 15,
+                                        height: 15,
+                                        marginRight: 5,
+                                        borderRadius: "50%",
+                                        boxSizing: "border-box",
+                                        backgroundColor: "#CA5369",
+                                        // task.checked === true
+                                        //   ? "#159D72"
+                                        //   : "#CA5369",
+                                      }}
+                                      onClick={() =>
+                                        handleStatusChange(task._id)
+                                      } // Assuming the ID is stored in _id property
+                                    />
+                                  </Grid>
+                                  <Grid item>
+                                    <div>
+                                      {task.title === undefined
+                                        ? ""
+                                        : task.title}
+                                    </div>
+                                  </Grid>
                                 </Grid>
                               </Grid>
+                              <Grid item xs={6}>
+                                <div>Updated last {task.date}</div>
+                              </Grid>
                             </Grid>
-                            <Grid item xs={6}>
-                              <div>Updated last {task.date}</div>
-                            </Grid>
-                          </Grid>
-                        );
+                          );
+                        }
                       })}
                     </div>
                     <TextField

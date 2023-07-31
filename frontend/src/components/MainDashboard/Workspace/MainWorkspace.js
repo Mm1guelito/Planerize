@@ -71,7 +71,7 @@ const MainWorkspace = (props) => {
                   fontWeight: "bold",
                 }}
               >
-                {workspace.title}
+                {workspace.title === undefined ? "" : workspace.title}
               </div>
             </Paper>
           </Grid>
